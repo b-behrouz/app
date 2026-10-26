@@ -1,0 +1,23 @@
+<!doctype html><html lang="fa" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تنظیم اتصال فرم هم‌قدم</title>
+<style>body{font:16px/1.9 Tahoma,sans-serif;background:#f2f7fd;color:#182d53;margin:0;padding:24px}main{max-width:640px;margin:auto;background:white;padding:24px;border:1px solid #dce1e7;border-radius:8px}label{display:block;margin-top:20px}input{box-sizing:border-box;max-width:100%;width:100%;padding:10px;border:1px solid #dce1e7;border-radius:4px;font:inherit}button{margin-top:24px;padding:12px 20px;border:0;border-radius:4px;background:#182d53;color:white;font:inherit}#status{white-space:pre-wrap}small{color:#52606d}</style>
+<main><h1>تنظیم اتصال فرم هم‌قدم</h1><p>پس از انتشار Google Apps Script، فایل HTML سایت را انتخاب کنید و آدرس Web app را وارد کنید. نسخهٔ تنظیم‌شده فقط روی همین کامپیوتر ساخته و دانلود می‌شود.</p>
+<form id="config"><label for="source">فایل hamghadam-preview.html داخل بسته</label><input id="source" type="file" accept=".html,text/html" required>
+<label for="endpoint">آدرس Web app با پایان /exec</label><input id="endpoint" type="url" dir="ltr" placeholder="https://script.google.com/macros/s/…/exec" required><small>این آدرس عمومی اتصال است؛ رمز، توکن یا کلید API وارد نکنید.</small>
+<button>دانلود HTML آمادهٔ اتصال</button></form><p id="status" role="status" aria-live="polite"></p></main>
+<script>
+document.querySelector('#config').addEventListener('submit',async event=>{
+ event.preventDefault();const status=document.querySelector('#status');status.textContent='';
+ try{
+  const endpoint=document.querySelector('#endpoint').value.trim();
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(endpoint))throw Error('آدرس Web app معتبر با پایان /exec وارد کنید؛ آدرس /dev مناسب نیست.');
+  const file=document.querySelector('#source').files[0];if(!file)throw Error('فایل HTML سایت را انتخاب کنید.');
+  const source=await file.text();
+  const marker=/const HAMGHADAM_CENTER_ENDPOINT = '[^']*';/g;
+  if((source.match(marker)||[]).length!==1)throw Error('این فایل نسخهٔ سازگار فرم هم‌قدم نیست. فایل داخل همین بسته را انتخاب کنید.');
+  const updated=source.replace(marker,"const HAMGHADAM_CENTER_ENDPOINT = '"+endpoint+"';");
+  const url=URL.createObjectURL(new Blob([updated],{type:'text/html;charset=utf-8'}));
+  const a=document.createElement('a');a.href=url;a.download='hamghadam-preview.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);
+  status.textContent='فایل تنظیم‌شده دانلود شد. این فایل را جایگزین نسخهٔ سایت روی میزبانی استاتیک کنید. اتصال واقعی فقط پس از انتشار اسکریپت و آزمایش با شیت تأیید می‌شود.';
+ }catch(error){status.textContent=error.message;}
+});
+</script></html>

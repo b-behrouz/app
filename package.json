@@ -1,0 +1,15 @@
+{
+  "name": "hamghadam-local-preview",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Build and verify the recovered self-contained Hamghadam HTML; no dependencies are needed to open it.",
+  "scripts": {
+    "build": "python3 scripts/build_preview.py",
+    "check": "python3 scripts/check_project.py",
+    "test": "node tests/test_center_server.cjs",
+    "test:browser": "node tests/test_center_browser.cjs",
+    "test:local": "node tests/test_local_preview.cjs",
+    "setup:git": "python3 scripts/setup_git.py"
+  },
+  "devDependencies": {"playwright": "1.62.1"}
+}

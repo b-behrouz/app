@@ -1,0 +1,25 @@
+# Credentials and private local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+client_secret*.json
+*service-account*.json
+config/preview.local.json
+# Runtime state, request payloads and local scratch
+work/
+.private/
+*.log
+*.pid
+__pycache__/
+*.py[cod]
+node_modules/
+.playwright/
+.DS_Store
+Thumbs.db
+# Generated delivery archives and unrelated hosting credentials
+*.zip
+*.tar.gz
+.openai/

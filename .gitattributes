@@ -1,0 +1,2 @@
+# Preserve the exact whitespace recovered from the supplied inline stylesheet.
+src/style-2.css whitespace=-blank-at-eof
