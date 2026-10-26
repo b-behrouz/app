@@ -21,7 +21,7 @@ const path=require('path'),fs=require('fs'),assert=require('assert/strict');
    await page.getByRole('button',{name:'فیلترها',exact:true}).click();await page.getByRole('dialog').waitFor();await page.keyboard.press('Escape');
    await page.locator('a[href^="#/centers/"]').first().click();await page.waitForURL(/#\/centers\//);await page.getByText('معرفی مرکز',{exact:true}).first().waitFor();
    await page.goto(file+'#/introduce-center');await page.locator('#center-referral-name').waitFor();
-   await page.locator('button[type=submit]').click();await page.getByText('نام مرکز خدمات پرستاری را وارد کنید.',{exact:true}).waitFor();
+   await page.locator('.center-referral-form button[type=submit]').click();await page.getByText('نام مرکز خدمات پرستاری را وارد کنید.',{exact:true}).waitFor();
    await page.goto(file+'#/feedback');await page.locator('.feedback-form').waitFor();
    await page.goto(file);await page.getByRole('button',{name:'پشتیبانی',exact:true}).click();await page.getByRole('dialog').waitFor();await page.keyboard.press('Escape');
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
