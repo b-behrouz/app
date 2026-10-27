@@ -24,7 +24,15 @@ jobs:
       - run: node tests/test_center_server.cjs
       - run: python3 -m unittest discover -s tests -p test_security.py
       - run: python3 -m unittest discover -s tests -p test_pages_build.py
-      - run: npx playwright install --with-deps chromium
+      - name: Select runner Chrome or install pinned Playwright browser
+        run: |
+          runner_chrome=$(command -v google-chrome || command -v chromium || true)
+          if [ -n "$runner_chrome" ]; then
+            echo "CHROMIUM_PATH=$runner_chrome" >> "$GITHUB_ENV"
+            "$runner_chrome" --version
+          else
+            npx playwright install chromium
+          fi
       - run: node tests/test_center_browser.cjs
       - run: node tests/test_local_preview.cjs
       - run: node tests/test_pages.cjs
