@@ -32,6 +32,13 @@ function tests(){
  const savedHeader=rows[0][0];rows[0][0]='wrong';assert.equal(post(sample()).result.code,'HEADER_MISMATCH');assert.equal(rows[0][0],'wrong');rows[0][0]=savedHeader;
  assert.equal(JSON.stringify(tabs.get('داده قبلی')),before);
  const local=sample();local.origin='null';assert.equal(post(local).result.code,'INVALID_ORIGIN');server.props.ALLOW_LOCAL_PREVIEW='true';assert(post(local).result.ok);
+ const quota=createServer();quota.context.setupCenterRequests();const saved=sample();assert(quota.post(saved).result.persisted);
+ quota.props.CENTER_RATE_WINDOW=JSON.stringify({start:Date.now(),count:30});
+ assert.equal(quota.post(sample()).result.code,'RATE_LIMITED');assert(quota.post(saved).result.persisted);
+ assert.equal(quota.tabs.get('معرفی مراکز هم‌قدم').rows.length,2);
+ for(const origin of ['content://org.telegram.messenger','file://','https://hamghadam.test/path','*',null])assert.equal(quota.post({...sample(),origin}).result.code,'INVALID_ORIGIN');
+ quota.props.CENTER_RATE_WINDOW=JSON.stringify({start:Date.now()-61000,count:30});assert(quota.post(sample()).result.persisted);
+ assert.equal(post({...sample(),origin:'null'}).result.serviceVersion,'2026-10-27-local-origin-v2');
  context.testCenterRequestRoundTrip();
  console.log('PASS server: append, timestamp, status, persistent deduplication, conflicts, validation, formula escaping, write failure, locking, headers, unchanged old data, local opt-in.');
 }

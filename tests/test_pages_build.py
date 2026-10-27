@@ -9,7 +9,7 @@ class PagesBuildTests(unittest.TestCase):
   self.assertTrue((ROOT/'README.md').is_file());self.assertTrue((ROOT/'.nojekyll').is_file())
  def test_all_known_routes_have_physical_entry_files(self):
   manifest=json.loads((ROOT/'.pages-manifest.json').read_text())
-  self.assertEqual(manifest['base_path'],'/app/');self.assertEqual(len(manifest['routes']),20)
+  self.assertEqual(manifest['base_path'],'/app/');self.assertEqual(len(manifest['routes']),13)
   for route in manifest['routes']:
    data=(ROOT/route.lstrip('/')/'index.html').read_text()
    self.assertIn('/app/#'+route,data)

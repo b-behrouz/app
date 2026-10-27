@@ -10,7 +10,9 @@
     "test:browser": "node tests/test_center_browser.cjs",
     "test:local": "node tests/test_local_preview.cjs",
     "setup:git": "python3 scripts/setup_git.py",
-    "test:pages": "node tests/test_pages.cjs"
+    "test:pages": "node tests/test_pages.cjs",
+    "test:alerts": "node tests/test_form_alerts.cjs",
+    "test:directory": "node tests/test_public_centers.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

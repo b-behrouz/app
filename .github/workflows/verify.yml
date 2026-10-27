@@ -22,6 +22,7 @@ jobs:
       - run: python3 scripts/build_pages.py --check
       - run: python3 scripts/check_project.py
       - run: node tests/test_center_server.cjs
+      - run: node tests/test_center_origin.cjs
       - run: python3 -m unittest discover -s tests -p test_security.py
       - run: python3 -m unittest discover -s tests -p test_pages_build.py
       - name: Select runner Chrome or install pinned Playwright browser
@@ -34,6 +35,7 @@ jobs:
             npx playwright install chromium
           fi
       - run: node tests/test_center_browser.cjs
+      - run: node tests/test_form_alerts.cjs
       - run: node tests/test_local_preview.cjs
       - run: node tests/test_pages.cjs
       - name: Verify actual live Pages URL after publication

@@ -14,7 +14,7 @@
   font-size: 12px; font-weight: 500; line-height: 1.6; text-decoration: none; color: inherit;
   -webkit-tap-highlight-color: transparent;
 }
-.hamghadam-bottom-nav a[aria-current="page"] { color: var(--primary); background: var(--accent); font-weight: 700; }
+.hamghadam-bottom-nav a[aria-current="page"] { color: #3976B8; background: transparent; font-weight: 500; }
 .hamghadam-bottom-nav a:focus-visible, .hamghadam-bottom-nav button:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; }
 .hamghadam-bottom-nav svg { flex-shrink: 0; }
 .centers-scroll { padding-bottom: calc(24px + var(--bottom-nav-height)); scroll-padding-bottom: var(--bottom-nav-height); }
@@ -26,7 +26,7 @@
   appearance:none; border:0; background:transparent; cursor:pointer; font-family:inherit;
 }
 .hamghadam-bottom-nav a, .hamghadam-bottom-nav button { white-space:nowrap; }
-.hamghadam-bottom-nav button[aria-expanded=true] { color:var(--primary); background:var(--accent); font-weight:700; }
+.hamghadam-bottom-nav button[aria-expanded=true] { color:#3976B8; background:transparent; font-weight:500; }
 .hamghadam-support-sheet[data-slot=drawer-popup] {
   left:0; right:0; width:100%;
   height:auto; max-height:calc(100dvh - 24px); border-radius:var(--radius-card) var(--radius-card) 0 0;
@@ -57,13 +57,13 @@ a.hamghadam-support-handle { text-decoration:underline; text-underline-offset:4p
 .app-surface > .form-route.form-page > .page-main {
   padding-bottom:calc(var(--form-action-height, 65px) + var(--form-nav-height, var(--bottom-nav-height)) + 28px);
 }
-.feedback-page { --rating-card-height:72px; }
+.feedback-page { --rating-card-height:88px; }
 .feedback-page, .center-referral-form { min-width:0; }
 .feedback-form { display:flex; flex-direction:column; gap:20px; }
 .feedback-intro-title { font-size:18px; font-weight:700; line-height:1.8; }
 .feedback-page-body { display:flex; flex-direction:column; gap:28px; }
 .feedback-page-body > p { color:var(--muted-foreground); }
-.feedback-question + .feedback-question { padding-top:24px; border-top:1px solid var(--border); }
+.feedback-question + .feedback-question { padding-top:0; border:0; }
 .feedback-page textarea { min-height:128px; }
 .form-page [data-slot=input], .form-page [data-slot=textarea] { background:var(--card); }
 .feedback-page [data-variant=chip] {
@@ -82,7 +82,7 @@ a.hamghadam-support-handle { text-decoration:underline; text-underline-offset:4p
 }
 .app-surface .form-page footer.form-submit-bar [data-slot=button] { width:100%; min-width:0; }
 .form-page :is(input, textarea, [role=radio], [role=checkbox], [role=alert]) {
-  scroll-margin-top:140px;
+  scroll-margin-top:76px;
   scroll-margin-bottom:calc(var(--form-action-height, 65px) + var(--form-nav-height, var(--bottom-nav-height)) + 24px);
 }
 .feedback-success { display:grid; gap:16px; }
@@ -143,3 +143,106 @@ a.hamghadam-support-handle { text-decoration:underline; text-underline-offset:4p
   .center-card-actions > [data-slot=button] { padding-inline: 6px; gap: 4px; font-size: 11px; }
 }
 
+/* Shared shadcn/ui form Alert: logical grid placement keeps the icon at the RTL start. */
+.hamghadam-form-alert[data-slot=alert] {
+  --form-alert-background: #F1F5FC;
+  --form-alert-border: #D3DEEF;
+  --form-alert-icon: #365981;
+  --form-alert-text: #334D6D;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  column-gap: 12px;
+  row-gap: 4px;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--form-alert-border);
+  border-radius: var(--radius-control, 8px);
+  background: var(--form-alert-background);
+  color: var(--form-alert-text);
+  padding: 14px 16px;
+  text-align: start;
+  direction: rtl;
+  box-shadow: none;
+}
+.hamghadam-form-alert[data-status=success] {
+  --form-alert-background: #EDF6F5;
+  --form-alert-border: #C8DFDB;
+  --form-alert-icon: #28675F;
+  --form-alert-text: #214B48;
+}
+.hamghadam-form-alert[data-status=error] {
+  --form-alert-background: #FFF5F5;
+  --form-alert-border: #EBCFD3;
+  --form-alert-icon: #A62F3B;
+  --form-alert-text: #7D2934;
+}
+.hamghadam-form-alert[data-slot=alert] > svg {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: 20px;
+  height: 20px;
+  margin-block-start: 2px;
+  color: var(--form-alert-icon);
+  transform: none;
+}
+.hamghadam-form-alert [data-slot=alert-title],
+.hamghadam-form-alert [data-slot=alert-description] {
+  grid-column: 2;
+  min-width: 0;
+  margin: 0;
+  color: var(--form-alert-text);
+  font-size: 13px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+.hamghadam-form-alert [data-slot=alert-title] { font-weight: 700; }
+.hamghadam-form-alert:focus-visible { outline: 2px solid #182D5366; outline-offset: 3px; }
+@media (max-width: 360px) {
+  .hamghadam-form-alert[data-slot=alert] { column-gap: 10px; padding: 12px; }
+}
+
+/* Focus changes only the existing one-pixel border; invalid fields keep their error color. */
+.app-surface :is(input:not([type=checkbox]):not([type=radio]), textarea):is(:focus, :focus-visible) {
+  border-width: 1px;
+  border-color: #91B5DF;
+  outline: none;
+  box-shadow: none;
+}
+.app-surface :is(input, textarea)[aria-invalid=true]:is(:focus, :focus-visible) {
+  border-color: var(--destructive);
+}
+.hamghadam-bottom-nav :is(a, button) { position: relative; }
+.hamghadam-bottom-nav :is(a[aria-current=page], button[aria-expanded=true])::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 6px);
+  top: 3px;
+  width: 12px;
+  height: 2px;
+  border-radius: 2px;
+  background: #3976B8;
+  pointer-events: none;
+}
+.feedback-page [role=radio] { padding-block: 16px; }
+
+.site-header-compact .site-header-page-row { border-top: 0; }
+.feedback-features-title { margin-bottom: 8px; }
+
+/* Group rhythm replaces dividers. Floated legends share normal title/control spacing. */
+.feedback-page-body > [data-slot=field-group] { gap: 32px; }
+.feedback-page .feedback-question { min-width: 0; border: 0; padding: 0; gap: 10px; }
+.feedback-page fieldset.feedback-question { display: block; }
+.feedback-page .feedback-question > :is(legend, label) {
+  display: block; width: 100%; margin: 0 0 10px;
+  text-align: start; line-height: 1.9;
+}
+.feedback-page .feedback-question > legend { float: inline-start; }
+.feedback-page .feedback-question > legend + * { clear: both; }
+.feedback-page .feedback-question > label { margin-bottom: 0; }
+.hamghadam-bottom-nav :is(a, button) { gap: 4px; padding-top: 10px; padding-bottom: 5px; }
+.hamghadam-bottom-nav :is(a, button) > svg { width: 24px; height: 24px; }
+.feedback-page .feedback-question > :is(legend, label) { font-size: 13px; }
+.feedback-page .feedback-question > :is(legend, label) > span { font-size: 11px; color: var(--muted-foreground); }

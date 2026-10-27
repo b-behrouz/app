@@ -1,5 +1,6 @@
 /** Google Apps Script V8. Bound to, or authorized to edit, the target spreadsheet. */
 const CENTER_SPREADSHEET_ID = '1Z6H-1whyeoH0XNDzvY1u88dsOr2ltnVCLZQ_ukBHatc';
+const CENTER_SERVICE_VERSION = '2026-10-27-local-origin-v2';
 const CENTER_TAB = 'معرفی مراکز هم‌قدم';
 const CENTER_HEADERS = ['شناسه درخواست', 'زمان ثبت (UTC)', 'وضعیت', 'نام مرکز خدمات پرستاری', 'شماره تماس مرکز', 'شهر یا محدوده فعالیت', 'توضیحات خدمات مرکز', 'اثر انگشت درخواست'];
 
@@ -18,7 +19,7 @@ function setupCenterRequests() {
     assertCenterHeaders_(sheet);
     const properties = PropertiesService.getScriptProperties();
     if (!properties.getProperty('ALLOWED_ORIGINS'))
-      properties.setProperty('ALLOWED_ORIGINS', 'https://hamghadamcare.ir,https://www.hamghadamcare.ir');
+      properties.setProperty('ALLOWED_ORIGINS', 'https://b-behrouz.github.io,https://hamghadamcare.ir,https://www.hamghadamcare.ir');
     if (!properties.getProperty('ALLOW_LOCAL_PREVIEW'))
       properties.setProperty('ALLOW_LOCAL_PREVIEW', 'false');
     return 'Ready: ' + CENTER_TAB;
@@ -27,7 +28,7 @@ function setupCenterRequests() {
 
 function doPost(event) {
   let data = {};
-  let reply = { channel: 'hamghadam-center-v1', ok: false, persisted: false, code: 'SERVER_ERROR' };
+  let reply = { channel: 'hamghadam-center-v1', ok: false, persisted: false, code: 'SERVER_ERROR', serviceVersion: CENTER_SERVICE_VERSION };
   try {
     const raw = event && event.parameter && event.parameter.payload;
     if (typeof raw !== 'string' || raw.length > 20000) throw new Error('INVALID_REQUEST');
@@ -56,6 +57,7 @@ function doPost(event) {
       if (row !== null) {
         if (String(sheet.getRange(row, 8).getValue()) !== hash) throw new Error('ID_CONFLICT');
       } else {
+        enforceCenterRateLimit_();
         row = lastRow + 1;
         // Append exclusively. Other tabs and earlier rows are never rewritten.
         // Text format plus apostrophe escaping prevents spreadsheet formula execution.
@@ -75,7 +77,7 @@ function doPost(event) {
       delete reply.code;
     } finally { lock.releaseLock(); }
   } catch (error) {
-    const codes = ['INVALID_REQUEST', 'INVALID_ORIGIN', 'VALIDATION_ERROR', 'BUSY', 'SETUP_REQUIRED', 'HEADER_MISMATCH', 'ID_CONFLICT', 'VERIFY_FAILED'];
+    const codes = ['INVALID_REQUEST', 'INVALID_ORIGIN', 'VALIDATION_ERROR', 'BUSY', 'SETUP_REQUIRED', 'HEADER_MISMATCH', 'ID_CONFLICT', 'VERIFY_FAILED', 'RATE_LIMITED'];
     reply.code = codes.indexOf(error.message) >= 0 ? error.message : 'SERVER_ERROR';
     // Do not return exception details, sheet contents or contact data to the browser.
   }
@@ -89,12 +91,47 @@ function assertCenterHeaders_(sheet) {
 function isUuid_(value) {
   return typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
+/** Claimed origin is forgeable. This is transport policy, never user authentication. */
 function assertCenterOrigin_(origin) {
   const properties = PropertiesService.getScriptProperties();
-  const origins = (properties.getProperty('ALLOWED_ORIGINS') || '').split(',').map(value => value.trim()).filter(Boolean);
-  if (typeof origin !== 'string' || !(origins.indexOf(origin) >= 0 ||
-      (origin === 'null' && properties.getProperty('ALLOW_LOCAL_PREVIEW') === 'true')))
+  if (origin === 'null') {
+    // file:, content: and other opaque browser origins use the literal string "null".
+    if (properties.getProperty('ALLOW_LOCAL_PREVIEW') === 'true') return;
     throw new Error('INVALID_ORIGIN');
+  }
+  const origins = (properties.getProperty('ALLOWED_ORIGINS') || '').split(',').map(value => value.trim()).filter(Boolean);
+  if (typeof origin !== 'string' || !/^https?:\/\/[^\s/]+$/.test(origin) || origins.indexOf(origin) < 0)
+    throw new Error('INVALID_ORIGIN');
+}
+/** Fixed-size global quota under the script lock. Retries of saved IDs bypass it.
+ * Public intake has no authenticated user/IP: this limits bursts, not determined bots.
+ */
+function enforceCenterRateLimit_() {
+  const props = PropertiesService.getScriptProperties();
+  const now = Date.now();
+  let state;
+  try { state = JSON.parse(props.getProperty('CENTER_RATE_WINDOW') || 'null'); } catch (_) {}
+  if (!state || !Number.isFinite(state.start) || !Number.isFinite(state.count) || now - state.start >= 60000 || now < state.start)
+    state = { start: now, count: 0 };
+  if (state.count >= 30) throw new Error('RATE_LIMITED');
+  state.count++;
+  props.setProperty('CENTER_RATE_WINDOW', JSON.stringify(state));
+}
+/** Run in the editor: logs only transport configuration, never contact data or tokens. */
+function diagnoseCenterTransport() {
+  const props = PropertiesService.getScriptProperties();
+  const result = { serviceVersion: CENTER_SERVICE_VERSION,
+    allowedOrigins: props.getProperty('ALLOWED_ORIGINS'),
+    allowLocalPreview: props.getProperty('ALLOW_LOCAL_PREVIEW') };
+  result.acceptsLocal = false;
+  try { assertCenterOrigin_('null'); result.acceptsLocal = true; } catch (_) {}
+  console.log(JSON.stringify(result));
+  return result;
+}
+/** Public build marker: identifies deployed code, not editor code. No private settings. */
+function doGet() {
+  return ContentService.createTextOutput(JSON.stringify({ service: 'hamghadam-center', version: CENTER_SERVICE_VERSION }))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 function validateCenterValues_(data) {
   const limits = { name: 160, phone: 32, area: 200, services: 3000 };
@@ -138,4 +175,30 @@ function testCenterRequestRoundTrip() {
   const row = sheet.getRange(matches[0].getRow(), 1, 1, CENTER_HEADERS.length).getValues()[0];
   if (!row[1] || row[2] !== 'در انتظار بررسی') throw new Error('Timestamp/status test failed');
   console.log('PASS: one saved test row, timestamp and pending status verified; retry produced no duplicate. Request ID: ' + requestId);
+}
+
+/** Tests the ACTUAL deployed URL twice, then verifies ONE persisted row by ID.
+ * Run only after deploying this code. Appends a clearly labeled synthetic row.
+ * Does not delete rows. Requires script.external_request OAuth scope.
+ */
+function testDeployedCenterRequest() {
+  const endpoint = 'https://script.google.com/macros/s/AKfycbwPG9O4Ybynp97JAPGEgCVMRBNGli3HqQkYAZlln0NylYhlZFkfQgrtPZ8dgPD6jJcs9w/exec';
+  const marker = JSON.parse(UrlFetchApp.fetch(endpoint).getContentText());
+  if (marker.version !== CENTER_SERVICE_VERSION) throw new Error('DEPLOYED_VERSION_MISMATCH');
+  const sample = { requestId: Utilities.getUuid(), nonce: Utilities.getUuid(), origin: 'null',
+    name: '[آزمایش اتصال منتشرشده] مرکز نمونه', phone: '۰۵۱۳۸۴۵۶۷۸۹', area: 'مشهد — آزمایشی',
+    services: 'آزمایش POST واقعی دو بار با شناسه ثابت؛ این ردیف حذف نمی‌شود.' };
+  const sheet = SpreadsheetApp.openById(CENTER_SPREADSHEET_ID).getSheetByName(CENTER_TAB);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    sample.nonce = Utilities.getUuid();
+    const response = UrlFetchApp.fetch(endpoint, { method: 'post', payload: { payload: JSON.stringify(sample) }, muteHttpExceptions: true });
+    if (response.getResponseCode() !== 200) throw new Error('DEPLOYED_HTTP_ERROR');
+    const matches = sheet.getRange(2, 1, Math.max(1, sheet.getLastRow() - 1), 1)
+      .createTextFinder(sample.requestId).matchEntireCell(true).findAll();
+    if (matches.length !== 1) throw new Error('DEPLOYED_WRITE_OR_DEDUP_FAILED: ' + sample.requestId);
+    const saved = sheet.getRange(matches[0].getRow(), 1, 1, CENTER_HEADERS.length).getValues()[0];
+    if (!saved[1] || saved[2] !== 'در انتظار بررسی' || saved[3] !== sample.name) throw new Error('DEPLOYED_VERIFY_FAILED');
+  }
+  console.log('PASS deployed HTTP POST: exactly one saved row after two submissions. Request ID: ' + sample.requestId);
+  // This checks deployed persistence/dedup, not browser iframe/postMessage delivery.
 }

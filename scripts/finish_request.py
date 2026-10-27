@@ -36,10 +36,12 @@ def main():
  run(sys.executable,'scripts/build_pages.py')
  run(sys.executable,'scripts/check_project.py')
  run('node','tests/test_center_server.cjs')
+ run('node','tests/test_center_origin.cjs')
  run(sys.executable,'-m','unittest','discover','-s','tests','-p','test_security.py')
  run(sys.executable,'-m','unittest','discover','-s','tests','-p','test_pages_build.py')
  if args.browser:
   run('node','tests/test_center_browser.cjs')
+  run('node','tests/test_form_alerts.cjs')
   run('node','tests/test_pages.cjs')
  run('git','diff','--check')
  # Include only generated outputs from this exact source assembly, plus removals in the old manifest.

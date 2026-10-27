@@ -7,19 +7,3 @@
   --tw-ring-color: #182D5326;
 }
 .centers-scroll > .hero-gradient .hero-heading { color: #182D53; }
-.centers-scroll > .hero-gradient .hero-eyebrow {
-  position: relative;
-  color: #A65B19;
-}
-.centers-scroll > .hero-gradient .hero-eyebrow::before {
-  content: "";
-  position: absolute;
-  inset-inline-start: -12px;
-  top: calc(50% - 3px);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #A65B19;
-  box-shadow: 0 0 0 3px #FFF0DE;
-  pointer-events: none;
-}

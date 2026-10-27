@@ -16,7 +16,7 @@ def render(config=None):
         endpoint=values.get('apps_script_url','')
         if endpoint and not re.fullmatch(r'https://script\.google\.com/macros/s/[A-Za-z0-9_-]+/exec',endpoint):
             raise ValueError('Invalid Apps Script deployment URL')
-        html=html.replace("const HAMGHADAM_CENTER_ENDPOINT = '';",f"const HAMGHADAM_CENTER_ENDPOINT = '{endpoint}';",1)
+        html=re.sub(r"const HAMGHADAM_CENTER_ENDPOINT = '[^']*';",lambda _:f"const HAMGHADAM_CENTER_ENDPOINT = '{endpoint}';",html,count=1)
     return html.encode('utf-8')
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
