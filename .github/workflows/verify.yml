@@ -28,6 +28,17 @@ jobs:
       - run: node tests/test_center_browser.cjs
       - run: node tests/test_local_preview.cjs
       - run: node tests/test_pages.cjs
+      - name: Verify actual live Pages URL after publication
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        timeout-minutes: 8
+        run: node tests/test_live_pages.cjs
+      - name: Store live verification evidence
+        if: success() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hamghadam-live-qa
+          path: work/live-qa/
+          retention-days: 14
       - uses: actions/upload-artifact@v4
         if: success()
         with:
