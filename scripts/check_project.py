@@ -4,6 +4,8 @@ from pathlib import Path
 from html.parser import HTMLParser
 import argparse,re,subprocess,sys
 from build_preview import ROOT,render
+from build_pages import expected_files,files
+import json
 PATTERNS={
  'private key':re.compile(rb'-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----'),
  'GitHub credential':re.compile(rb'(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{50,})'),
@@ -58,10 +60,15 @@ def main():
   sources={n:git('show',':'+n).decode('utf-8') for n in source_names}
   assembled=re.sub(r'<!-- INLINE:([a-z0-9.-]+) -->',lambda m:sources['src/'+m[1]],sources['src/index.template.html'])
   if assembled!=sources['hamghadam-preview.html']:raise SystemExit('Staged HTML does not match staged sources')
-  print('PASS: staged source and staged output match.');return
+  pages=expected_files(assembled.encode(),sources['src/app.js'],json.loads(git('show',':config/pages.json')))
+  for name,data in pages.items():
+   if git('show',':'+name)!=data:raise SystemExit('Staged Pages output mismatch: '+name)
+  print('PASS: staged preview and Pages outputs match staged sources.');return
  scan(candidates())
  html=render()
  if (ROOT/'hamghadam-preview.html').read_bytes()!=html:raise SystemExit('HTML must be rebuilt')
+ for name,data in files().items():
+  if not (ROOT/name).exists() or (ROOT/name).read_bytes()!=data:raise SystemExit('Pages output must be rebuilt: '+name)
  text=html.decode('utf-8');AssetCheck().feed(text)
  for p in sorted((ROOT/'src').glob('*.css')):
   css=p.read_text()

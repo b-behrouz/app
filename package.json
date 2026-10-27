@@ -4,12 +4,15 @@
   "version": "1.0.0",
   "description": "Build and verify the recovered self-contained Hamghadam HTML; no dependencies are needed to open it.",
   "scripts": {
-    "build": "python3 scripts/build_preview.py",
+    "build": "python3 scripts/build_preview.py && python3 scripts/build_pages.py",
     "check": "python3 scripts/check_project.py",
     "test": "node tests/test_center_server.cjs",
     "test:browser": "node tests/test_center_browser.cjs",
     "test:local": "node tests/test_local_preview.cjs",
-    "setup:git": "python3 scripts/setup_git.py"
+    "setup:git": "python3 scripts/setup_git.py",
+    "test:pages": "node tests/test_pages.cjs"
   },
-  "devDependencies": {"playwright": "1.62.1"}
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
 }

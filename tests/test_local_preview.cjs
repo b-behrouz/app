@@ -19,7 +19,7 @@ const path=require('path'),fs=require('fs'),assert=require('assert/strict');
    await page.waitForFunction(()=>document.querySelector('#center-search-results')?.getAttribute('data-result-count')==='0');
    await search.fill('');await page.waitForFunction(()=>Number(document.querySelector('#center-search-results')?.getAttribute('data-result-count'))>0);
    await page.getByRole('button',{name:'فیلترها',exact:true}).click();await page.getByRole('dialog').waitFor();await page.keyboard.press('Escape');
-   await page.locator('a[href^="#/centers/"]').first().click();await page.waitForURL(/#\/centers\//);await page.getByText('معرفی مرکز',{exact:true}).first().waitFor();
+   await page.locator('a[href^="#/centers/"]').first().click();await page.waitForURL(/#\/centers\//);await page.locator('.app-shell.profile-route').waitFor();
    await page.goto(file+'#/introduce-center');await page.locator('#center-referral-name').waitFor();
    await page.locator('.center-referral-form button[type=submit]').click();await page.getByText('نام مرکز خدمات پرستاری را وارد کنید.',{exact:true}).waitFor();
    await page.goto(file+'#/feedback');await page.locator('.feedback-form').waitFor();
