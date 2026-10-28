@@ -1,0 +1,41 @@
+name: Back up current public index
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/backup-hosting.yml
+      - scripts/backup_hosting.py
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: hamghadam-production-hosting
+  cancel-in-progress: false
+jobs:
+  backup:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production-hosting
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify backup code before using credentials
+        run: python3 -m unittest discover -s tests -p test_backup_hosting.py
+      - name: Download only public index using verified FTPS (read only)
+        env:
+          HOSTING_FTPS_HOST: ${{ secrets.HOSTING_FTPS_HOST }}
+          HOSTING_FTPS_PORT: ${{ secrets.HOSTING_FTPS_PORT }}
+          HOSTING_FTPS_USER: ${{ secrets.HOSTING_FTPS_USER }}
+          HOSTING_FTPS_PASSWORD: ${{ secrets.HOSTING_FTPS_PASSWORD }}
+          HOSTING_REMOTE_DIR: ${{ secrets.HOSTING_REMOTE_DIR }}
+        run: python3 scripts/backup_hosting.py --output work/hosting-backup
+      - name: Keep public index backup for retrieval
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-index-backup-${{ github.run_id }}
+          path: work/hosting-backup/
+          if-no-files-found: error
+          retention-days: 7
