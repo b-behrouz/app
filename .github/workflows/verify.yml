@@ -26,6 +26,7 @@ jobs:
       - run: python3 -m unittest discover -s tests -p test_security.py
       - run: python3 -m unittest discover -s tests -p test_pages_build.py
       - run: python3 -m unittest discover -s tests -p test_hosting.py
+      - run: python3 -m unittest discover -s tests -p test_hosting_approval.py
       - run: python3 scripts/build_hosting.py --output work/hosting
       - name: Select runner Chrome or install pinned Playwright browser
         run: |

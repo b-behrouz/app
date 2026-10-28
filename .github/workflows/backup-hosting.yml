@@ -1,10 +1,5 @@
 name: Back up current public index
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/backup-hosting.yml
-      - scripts/backup_hosting.py
   workflow_dispatch:
 permissions:
   contents: read

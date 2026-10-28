@@ -1,26 +1,20 @@
 name: Deploy production hosting
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/deploy-hosting.yml
-      - scripts/deploy_ftps.py
-      - scripts/build_hosting.py
-  workflow_run:
-    workflows: [Verify local HTML]
-    types: [completed]
-    branches: [main]
   workflow_dispatch:
     inputs:
       operation:
         type: choice
-        options: [check, rollback]
+        options: [check, deploy, rollback]
         default: check
+        required: true
       revision:
-        description: Full previously deployed commit SHA (rollback only)
+        description: Full target SHA (deploy/rollback only)
+        type: string
+      approved_revision:
+        description: Full SHA independently approved by the owner for this host operation
         type: string
       confirmation:
-        description: Enter ROLLBACK only for an intentional restore
+        description: DEPLOY hamghadamcare.ir SHA or ROLLBACK hamghadamcare.ir SHA; only after explicit owner approval
         type: string
 permissions:
   contents: read
@@ -29,20 +23,14 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy:
-    if: >-
-      ((github.event_name == 'workflow_dispatch' || github.event_name == 'push') && github.ref == 'refs/heads/main') ||
-      (github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.event == 'push' &&
-       github.event.workflow_run.run_attempt == 1 &&
-       github.event.workflow_run.head_repository.full_name == github.repository &&
-       vars.HOSTING_ENABLED == 'true')
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: production-hosting
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.sha }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -54,32 +42,12 @@ jobs:
       - name: Validate release and activation gate
         id: gate
         env:
-          EVENT: ${{ github.event_name }}
-          RUN_SHA: ${{ github.event.workflow_run.head_sha }}
           OPERATION: ${{ inputs.operation }}
           REVISION: ${{ inputs.revision }}
+          APPROVED_REVISION: ${{ inputs.approved_revision }}
           CONFIRMATION: ${{ inputs.confirmation }}
           ENABLED: ${{ vars.HOSTING_ENABLED }}
-          NOT_BEFORE: ${{ vars.HOSTING_NOT_BEFORE }}
-        run: |
-          python3 - <<'PY'
-          import datetime, os, re, subprocess
-          def git(*args): return subprocess.check_output(['git',*args],text=True).strip()
-          operation=os.environ['OPERATION'] if os.environ['EVENT']=='workflow_dispatch' else ('check' if os.environ['EVENT']=='push' else 'deploy')
-          current=git('rev-parse','HEAD');revision=current;ready=True
-          if operation=='deploy':
-              if not os.environ['NOT_BEFORE']: raise SystemExit('Set HOSTING_NOT_BEFORE before enabling deployment')
-              cutoff=datetime.datetime.fromisoformat(os.environ['NOT_BEFORE'].replace('Z','+00:00'))
-              if cutoff.tzinfo is None: raise SystemExit('Activation timestamp must include timezone')
-              created=datetime.datetime.fromisoformat(git('show','-s','--format=%cI',current))
-              ready=os.environ['RUN_SHA']==current and created>cutoff
-          if operation=='rollback':
-              revision=os.environ['REVISION']
-              if os.environ['ENABLED']!='true' or os.environ['CONFIRMATION']!='ROLLBACK' or not re.fullmatch('[0-9a-f]{40}',revision):raise SystemExit('Rollback requires enabled hosting, exact SHA and ROLLBACK confirmation')
-              subprocess.run(['git','merge-base','--is-ancestor',revision,current],check=True)
-          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
-              out.write(f'ready={str(ready).lower()}\noperation={operation}\nrevision={revision}\n')
-          PY
+        run: python3 scripts/hosting_approval.py
       - name: Build and run required checks before any host write
         if: steps.gate.outputs.ready == 'true'
         run: |
