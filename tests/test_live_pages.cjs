@@ -1,9 +1,9 @@
 // Public-site verification only: no interception, local fixtures, credentials or form submissions.
 const {chromium}=require('playwright');
 const fs=require('fs'),crypto=require('crypto'),assert=require('assert/strict');
-const base='https://b-behrouz.github.io/app/';
+const base=process.env.HAMGHADAM_LIVE_URL||'https://b-behrouz.github.io/app/';
 const digest=data=>crypto.createHash('sha256').update(data).digest('hex');
-const expected=digest(fs.readFileSync('index.html'));
+const expected=digest(fs.readFileSync(process.env.HAMGHADAM_LIVE_INDEX||'index.html'));
 (async()=>{
  const browser=await chromium.launch({...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}),args:['--no-sandbox']});
  const report={url:base,expectedSha256:expected,checks:[],commit:process.env.GITHUB_SHA||null};

@@ -1,0 +1,136 @@
+name: Deploy production hosting
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/deploy-hosting.yml
+      - scripts/deploy_ftps.py
+      - scripts/build_hosting.py
+  workflow_run:
+    workflows: [Verify local HTML]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      operation:
+        type: choice
+        options: [check, rollback]
+        default: check
+      revision:
+        description: Full previously deployed commit SHA (rollback only)
+        type: string
+      confirmation:
+        description: Enter ROLLBACK only for an intentional restore
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: hamghadam-production-hosting
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: >-
+      ((github.event_name == 'workflow_dispatch' || github.event_name == 'push') && github.ref == 'refs/heads/main') ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.run_attempt == 1 &&
+       github.event.workflow_run.head_repository.full_name == github.repository &&
+       vars.HOSTING_ENABLED == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production-hosting
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Validate release and activation gate
+        id: gate
+        env:
+          EVENT: ${{ github.event_name }}
+          RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+          OPERATION: ${{ inputs.operation }}
+          REVISION: ${{ inputs.revision }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+          ENABLED: ${{ vars.HOSTING_ENABLED }}
+          NOT_BEFORE: ${{ vars.HOSTING_NOT_BEFORE }}
+        run: |
+          python3 - <<'PY'
+          import datetime, os, re, subprocess
+          def git(*args): return subprocess.check_output(['git',*args],text=True).strip()
+          operation=os.environ['OPERATION'] if os.environ['EVENT']=='workflow_dispatch' else ('check' if os.environ['EVENT']=='push' else 'deploy')
+          current=git('rev-parse','HEAD');revision=current;ready=True
+          if operation=='deploy':
+              if not os.environ['NOT_BEFORE']: raise SystemExit('Set HOSTING_NOT_BEFORE before enabling deployment')
+              cutoff=datetime.datetime.fromisoformat(os.environ['NOT_BEFORE'].replace('Z','+00:00'))
+              if cutoff.tzinfo is None: raise SystemExit('Activation timestamp must include timezone')
+              created=datetime.datetime.fromisoformat(git('show','-s','--format=%cI',current))
+              ready=os.environ['RUN_SHA']==current and created>cutoff
+          if operation=='rollback':
+              revision=os.environ['REVISION']
+              if os.environ['ENABLED']!='true' or os.environ['CONFIRMATION']!='ROLLBACK' or not re.fullmatch('[0-9a-f]{40}',revision):raise SystemExit('Rollback requires enabled hosting, exact SHA and ROLLBACK confirmation')
+              subprocess.run(['git','merge-base','--is-ancestor',revision,current],check=True)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write(f'ready={str(ready).lower()}\noperation={operation}\nrevision={revision}\n')
+          PY
+      - name: Build and run required checks before any host write
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          npm ci --ignore-scripts
+          python3 scripts/build_preview.py --check
+          python3 scripts/build_pages.py --check
+          python3 scripts/check_project.py
+          node tests/test_center_server.cjs
+          node tests/test_center_origin.cjs
+          python3 -m unittest discover -s tests -p 'test_*.py'
+          python3 scripts/build_hosting.py --revision '${{ steps.gate.outputs.revision }}' --output work/hosting
+      - name: Select browser
+        if: steps.gate.outputs.ready == 'true' && steps.gate.outputs.operation != 'check'
+        run: |
+          runner_chrome=$(command -v google-chrome || command -v chromium || true)
+          if [ -n "$runner_chrome" ]; then
+            echo "CHROMIUM_PATH=$runner_chrome" >> "$GITHUB_ENV"
+          else
+            npx playwright install chromium
+          fi
+      - name: Verify production bundle before upload
+        if: steps.gate.outputs.ready == 'true' && steps.gate.outputs.operation != 'check'
+        run: node tests/test_hosting_browser.cjs
+      - name: Check encrypted connection or deploy approved release
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          OPERATION: ${{ steps.gate.outputs.operation }}
+          HOSTING_FTPS_HOST: ${{ secrets.HOSTING_FTPS_HOST }}
+          HOSTING_FTPS_PORT: ${{ secrets.HOSTING_FTPS_PORT }}
+          HOSTING_FTPS_USER: ${{ secrets.HOSTING_FTPS_USER }}
+          HOSTING_FTPS_PASSWORD: ${{ secrets.HOSTING_FTPS_PASSWORD }}
+          HOSTING_REMOTE_DIR: ${{ secrets.HOSTING_REMOTE_DIR }}
+          HOSTING_INITIAL_INDEX_SHA256: ${{ secrets.HOSTING_INITIAL_INDEX_SHA256 }}
+          HOSTING_PUBLIC_URL: https://hamghadamcare.ir/
+        run: |
+          if [ "$OPERATION" = check ]; then
+            python3 scripts/deploy_ftps.py --directory work/hosting --check
+          else
+            python3 scripts/deploy_ftps.py --directory work/hosting
+          fi
+      - name: Verify actual production URL on mobile and desktop
+        if: steps.gate.outputs.ready == 'true' && steps.gate.outputs.operation != 'check'
+        env:
+          HAMGHADAM_LIVE_URL: https://hamghadamcare.ir/
+          HAMGHADAM_LIVE_INDEX: work/hosting/index.html
+        run: node tests/test_live_pages.cjs
+      - name: Keep approved release for rollback reference
+        if: success() && steps.gate.outputs.ready == 'true' && steps.gate.outputs.operation != 'check'
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-${{ steps.gate.outputs.revision }}
+          path: work/hosting/
+          include-hidden-files: true
+          retention-days: 14

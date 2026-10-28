@@ -25,6 +25,8 @@ jobs:
       - run: node tests/test_center_origin.cjs
       - run: python3 -m unittest discover -s tests -p test_security.py
       - run: python3 -m unittest discover -s tests -p test_pages_build.py
+      - run: python3 -m unittest discover -s tests -p test_hosting.py
+      - run: python3 scripts/build_hosting.py --output work/hosting
       - name: Select runner Chrome or install pinned Playwright browser
         run: |
           runner_chrome=$(command -v google-chrome || command -v chromium || true)
@@ -38,6 +40,7 @@ jobs:
       - run: node tests/test_form_alerts.cjs
       - run: node tests/test_local_preview.cjs
       - run: node tests/test_pages.cjs
+      - run: node tests/test_hosting_browser.cjs
       - name: Verify actual live Pages URL after publication
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         timeout-minutes: 8
