@@ -123,6 +123,11 @@ def main():
 if __name__=='__main__':
     try:main()
     except Exception as error:
+        if isinstance(error, ssl.SSLCertVerificationError):
+            reasons={62:'hostname mismatch',10:'certificate expired',9:'certificate not yet valid',
+                     18:'self-signed leaf',19:'self-signed chain',20:'issuer certificate unavailable',21:'leaf chain cannot be verified'}
+            code=error.verify_code
+            print('TLS verification code '+str(code)+': '+reasons.get(code,'certificate trust failure')+'. Fix the server name/certificate; never disable TLS verification.',file=sys.stderr)
         # Server error messages can echo account/path data. Do not log exception strings.
         print('FTPS deployment/check failed ('+type(error).__name__+'). No plaintext fallback. Review connection, TLS, quota, collision and public verification.',file=sys.stderr)
         sys.exit(1)
