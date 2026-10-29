@@ -1,0 +1,62 @@
+# One-time recovery authorized by the owner in chat on 2026-10-29.
+# Only the already approved 081ca34 payload can be dispatched. Not a general auto-deploy.
+name: Back up and dispatch approved initial migration
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/approved-initial-migration.yml]
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: hamghadam-production-hosting
+  cancel-in-progress: false
+jobs:
+  backup-and-dispatch:
+    if: github.repository == 'b-behrouz/app' && github.run_attempt == 1
+    runs-on: ubuntu-latest
+    environment: production-hosting
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Bound this one-time authorization
+        run: |
+          python3 - <<'PY'
+          import datetime
+          assert datetime.datetime.now(datetime.timezone.utc)<datetime.datetime(2026,10,31,tzinfo=datetime.timezone.utc),'One-time authorization expired'
+          PY
+          git merge-base --is-ancestor 081ca34056de8a659696c53f382409582c6b36e3 HEAD
+          python3 -m unittest discover -s tests -p 'test_*.py'
+      - name: Back up existing public entrypoints (no remote writes)
+        id: snapshot
+        env:
+          HOSTING_FTPS_HOST: ${{ secrets.HOSTING_FTPS_HOST }}
+          HOSTING_FTPS_PORT: ${{ secrets.HOSTING_FTPS_PORT }}
+          HOSTING_FTPS_USER: ${{ secrets.HOSTING_FTPS_USER }}
+          HOSTING_FTPS_PASSWORD: ${{ secrets.HOSTING_FTPS_PASSWORD }}
+          HOSTING_REMOTE_DIR: ${{ secrets.HOSTING_REMOTE_DIR }}
+        run: python3 scripts/backup_hosting.py --entrypoints-revision 081ca34056de8a659696c53f382409582c6b36e3 --output work/initial-entrypoints-backup
+      - name: Persist backup before any deployment can start
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-entrypoints-${{ github.run_id }}
+          path: work/initial-entrypoints-backup/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Dispatch the separately approved exact release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MANIFEST_SHA: ${{ steps.snapshot.outputs.manifest_sha256 }}
+        run: |
+          gh workflow run deploy-hosting.yml --repo b-behrouz/app --ref main \
+            -f operation=deploy \
+            -f revision=081ca34056de8a659696c53f382409582c6b36e3 \
+            -f approved_revision=081ca34056de8a659696c53f382409582c6b36e3 \
+            -f 'confirmation=DEPLOY hamghadamcare.ir 081ca34056de8a659696c53f382409582c6b36e3' \
+            -f backup_run_id="$GITHUB_RUN_ID" \
+            -f backup_manifest_sha256="$MANIFEST_SHA"

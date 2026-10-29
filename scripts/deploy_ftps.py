@@ -35,7 +35,21 @@ def validate_bundle(directory):
     if sum(map(len,files.values()))>15*1024*1024:raise ValueError('Bundle budget exceeded')
     return files,meta
 
-def deploy(ftp,files,meta,initial_hash='',check=False):
+def validate_adoption(directory,manifest_sha,revision):
+    if not directory:return {}
+    if not re.fullmatch(r'[0-9a-f]{64}',manifest_sha or ''):raise ValueError('Exact backup manifest digest required')
+    raw=(Path(directory)/'adoption-manifest.json').read_bytes()
+    if digest(raw)!=manifest_sha:raise ValueError('Backup manifest digest mismatch')
+    manifest=json.loads(raw)
+    if manifest.get('schema')!=1 or manifest.get('site')!='https://hamghadamcare.ir/' or manifest.get('target_revision')!=revision:raise ValueError('Backup targets another site or revision')
+    hashes=manifest['files']
+    if not hashes or len(hashes)>20:raise ValueError('Invalid backup file count')
+    for name,value in hashes.items():
+        if not safe_path(name) or not name.endswith('.html'):raise ValueError('Invalid backup target')
+        if digest((Path(directory)/name).read_bytes())!=value:raise ValueError('Backed-up bytes do not match manifest')
+    return hashes
+
+def deploy(ftp,files,meta,initial_hash='',check=False,adoption=None):
     if any(PurePosixPath(name.rstrip('/')).name=='index.php' for name in ftp.nlst('.')):
         raise ValueError('Existing index.php requires manual DocumentRoot review')
     oldraw=bounded_read(ftp,META,65536);old=json.loads(oldraw) if oldraw else None
@@ -50,6 +64,7 @@ def deploy(ftp,files,meta,initial_hash='',check=False):
         if data is None or data==files[name]:continue
         if name==META and old:continue
         if old and old['files'].get(name)==digest(data):continue
+        if not old and adoption and adoption.get(name)==digest(data):continue
         if not old and name=='index.html' and initial_hash and digest(data)==initial_hash:continue
         print('PREFLIGHT BLOCKED: target='+name+'; managed_hash_match=false',file=sys.stderr)
         if name=='index.html' and not old:
@@ -106,8 +121,9 @@ def public_check(expected):
     print('LIVE HTML VERIFIED: HTTPS certificate and SHA256 match uploaded index.')
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--directory',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--directory',type=Path,required=True);p.add_argument('--check',action='store_true');p.add_argument('--adoption-backup',type=Path);p.add_argument('--adoption-manifest-sha');a=p.parse_args()
     files,meta=validate_bundle(a.directory)
+    adoption=validate_adoption(a.adoption_backup,a.adoption_manifest_sha,meta['revision'])
     root=os.environ['HOSTING_REMOTE_DIR']
     if not root.startswith('/') or any(x in root for x in ['\r','\n','..']):raise ValueError('Use an absolute chroot-relative destination')
     context=ssl.create_default_context();context.minimum_version=ssl.TLSVersion.TLSv1_2
@@ -120,7 +136,7 @@ def main():
         ftp.login(os.environ['HOSTING_FTPS_USER'],os.environ['HOSTING_FTPS_PASSWORD'])
         print('Requiring encrypted passive data channel.')
         ftp.prot_p();ftp.set_pasv(True);ftp.cwd(root)
-        deploy(ftp,files,meta,os.environ.get('HOSTING_INITIAL_INDEX_SHA256',''),a.check)
+        deploy(ftp,files,meta,os.environ.get('HOSTING_INITIAL_INDEX_SHA256',''),a.check,adoption)
         if not a.check:public_check(files['index.html'])
     finally:ftp.close()
 if __name__=='__main__':

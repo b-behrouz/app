@@ -16,3 +16,9 @@
 منابع رسمی برای امکانات عمومی cPanel (نه تأیید حساب فعلی):
 - https://docs.cpanel.net/cpanel/files/ftp-accounts/
 - https://support.cpanel.net/hc/en-us/articles/4413517293719-Use-Web-Disk-or-FTPES-FTP-SSL-to-provide-secure-access-for-file-upload-management-without-sharing-cPanel-login-information
+
+## مهاجرت اولیهٔ مورد تأیید — ۲۹ اکتبر ۲۰۲۶
+
+مالک پس از توقف collision مسیر سفیر سلامت، صریحاً خواست پشتیبان‌گیری و ادامهٔ جایگزینی بدون ارجاع تصمیم‌های اجرایی به او انجام شود. برای همین عملیات مشخص، approved-initial-migration.yml فقط commit مصوب 081ca34056de8a659696c53f382409582c6b36e3 را، پس از backup دو بار خوانده‌شدهٔ HTMLهای موجود در مسیرهای همین release و ذخیره artifact، از داخل runner به workflow دستی انتشار dispatch می‌کند. این استثنای محدود برای همین مجوز است، نه مجوز عمومی نشر خودکار؛ run_attempt باید ۱ باشد و پس از ۳۱ اکتبر UTC متوقف می‌شود. ویرایش یا استفادهٔ مجدد آن بدون مجوز تازه ممنوع است. دروازهٔ دستیِ دامنه/SHA همچنان اجرا می‌شود.
+
+در deploy، artifact پشتیبان با run-id و نام ثابت دریافت، هش manifest و بایت تک‌تک فایل‌ها و target_revision/site بررسی می‌شوند. فقط فایل‌های HTMLِ allowlist که هنوز دقیقاً با بایت پشتیبان منطبق‌اند در اولین مهاجرت قابل جایگزینی هستند. تغییر فایل از زمان backup، فایل نامرتبط، .htaccess، تنظیمات و ایمیل اجازهٔ overwrite نمی‌گیرند. پشتیبان کامل هاست نیست. payload سایت همان SHA مصوب است؛ ابزار مهاجرت و workflow جدید commit دیگری دارند.

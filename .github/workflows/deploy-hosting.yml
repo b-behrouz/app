@@ -16,8 +16,15 @@ on:
       confirmation:
         description: DEPLOY hamghadamcare.ir SHA or ROLLBACK hamghadamcare.ir SHA; only after explicit owner approval
         type: string
+      backup_run_id:
+        description: Verified public entrypoint backup run ID (initial migration only)
+        type: string
+      backup_manifest_sha256:
+        description: Exact SHA256 of the immutable adoption backup manifest
+        type: string
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: hamghadam-production-hosting
   cancel-in-progress: false
@@ -71,10 +78,20 @@ jobs:
       - name: Verify production bundle before upload
         if: steps.gate.outputs.ready == 'true' && steps.gate.outputs.operation != 'check'
         run: node tests/test_hosting_browser.cjs
+      - name: Retrieve verified initial backup (if supplied)
+        if: steps.gate.outputs.ready == 'true' && inputs.backup_run_id != '' && steps.gate.outputs.operation == 'deploy'
+        uses: actions/download-artifact@v4
+        with:
+          name: public-entrypoints-${{ inputs.backup_run_id }}
+          run-id: ${{ inputs.backup_run_id }}
+          github-token: ${{ github.token }}
+          path: work/adoption-backup
       - name: Check encrypted connection or deploy approved release
         if: steps.gate.outputs.ready == 'true'
         env:
           OPERATION: ${{ steps.gate.outputs.operation }}
+          BACKUP_RUN_ID: ${{ inputs.backup_run_id }}
+          BACKUP_MANIFEST_SHA: ${{ inputs.backup_manifest_sha256 }}
           HOSTING_FTPS_HOST: ${{ secrets.HOSTING_FTPS_HOST }}
           HOSTING_FTPS_PORT: ${{ secrets.HOSTING_FTPS_PORT }}
           HOSTING_FTPS_USER: ${{ secrets.HOSTING_FTPS_USER }}
@@ -85,6 +102,8 @@ jobs:
         run: |
           if [ "$OPERATION" = check ]; then
             python3 scripts/deploy_ftps.py --directory work/hosting --check
+          elif [ -n "$BACKUP_RUN_ID" ]; then
+            python3 scripts/deploy_ftps.py --directory work/hosting --adoption-backup work/adoption-backup --adoption-manifest-sha "$BACKUP_MANIFEST_SHA"
           else
             python3 scripts/deploy_ftps.py --directory work/hosting
           fi
