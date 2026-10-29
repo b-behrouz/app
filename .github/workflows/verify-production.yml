@@ -1,0 +1,46 @@
+name: Verify production without deployment
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/verify-production.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-public-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Materialize exact approved expected HTML
+        run: |
+          mkdir -p work
+          git show 081ca34056de8a659696c53f382409582c6b36e3:hamghadam-preview.html > work/approved-live-index.html
+      - name: Select browser
+        run: |
+          runner_chrome=$(command -v google-chrome || command -v chromium || true)
+          if [ -n "$runner_chrome" ]; then
+            echo "CHROMIUM_PATH=$runner_chrome" >> "$GITHUB_ENV"
+          else
+            npx playwright install chromium
+          fi
+      - name: Verify actual production (no interception or form submission)
+        env:
+          HAMGHADAM_LIVE_URL: https://hamghadamcare.ir/
+          HAMGHADAM_LIVE_INDEX: work/approved-live-index.html
+          HAMGHADAM_LIVE_TIMEOUT_MS: '300000'
+        run: node tests/test_live_pages.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: production-readonly-evidence-${{ github.run_id }}
+          path: work/live-qa/
+          if-no-files-found: warn
+          retention-days: 14

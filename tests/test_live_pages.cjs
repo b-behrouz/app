@@ -4,6 +4,9 @@ const fs=require('fs'),crypto=require('crypto'),assert=require('assert/strict');
 const base=process.env.HAMGHADAM_LIVE_URL||'https://b-behrouz.github.io/app/';
 const digest=data=>crypto.createHash('sha256').update(data).digest('hex');
 const expected=digest(fs.readFileSync(process.env.HAMGHADAM_LIVE_INDEX||'index.html'));
+const remoteTimeout=Number(process.env.HAMGHADAM_LIVE_TIMEOUT_MS||20000);
+assert(Number.isFinite(remoteTimeout)&&remoteTimeout>=20000&&remoteTimeout<=300000);
+const navigationTimeout=Math.max(30000,remoteTimeout);
 (async()=>{
  const browser=await chromium.launch({...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}),args:['--no-sandbox']});
  const report={url:base,expectedSha256:expected,checks:[],commit:process.env.GITHUB_SHA||null};
@@ -13,7 +16,7 @@ const expected=digest(fs.readFileSync(process.env.HAMGHADAM_LIVE_INDEX||'index.h
   let ready=false,last='no response';
   while(Date.now()<deadline){
    try{
-    const response=await request.request.get(base,{headers:{'Cache-Control':'no-cache'},timeout:20000});
+    const response=await request.request.get(base,{headers:{'Cache-Control':'no-cache'},timeout:remoteTimeout});
     const observed=digest(await response.body());
     last=`HTTP ${response.status()}, SHA256 ${observed}`;
     if(response.status()===200&&observed===expected){ready=true;report.observedSha256=observed;report.httpStatus=200;break}
@@ -24,8 +27,9 @@ const expected=digest(fs.readFileSync(process.env.HAMGHADAM_LIVE_INDEX||'index.h
   assert(ready,'Live response did not match the approved HTML: '+last);
   await request.close();
   for(const [name,width] of [['mobile',390],['desktop',1440]]){
-   const context=await browser.newContext({viewport:{width,height:900}});const page=await context.newPage();
+   const context=await browser.newContext({viewport:{width,height:900}});context.setDefaultNavigationTimeout(navigationTimeout);const page=await context.newPage();
    const errors=[];page.on('pageerror',e=>errors.push(e.message));
+   console.log('Checking live interface:',name);
    const response=await page.goto(base,{waitUntil:'load'});assert.equal(response.status(),200);
    await page.locator('.hero-gradient').waitFor();
    assert(!(await page.locator('body').innerText()).includes('نسخهٔ مستقل محلی'));
