@@ -51,6 +51,9 @@ def deploy(ftp,files,meta,initial_hash='',check=False):
         if name==META and old:continue
         if old and old['files'].get(name)==digest(data):continue
         if not old and name=='index.html' and initial_hash and digest(data)==initial_hash:continue
+        print('PREFLIGHT BLOCKED: target='+name+'; managed_hash_match=false',file=sys.stderr)
+        if name=='index.html' and not old:
+            print('INITIAL INDEX: approval_hash_present='+str(bool(initial_hash)).lower()+'; approval_hash_matches='+str(digest(data)==initial_hash).lower(),file=sys.stderr)
         raise ValueError('Remote file collision or out-of-band edit: '+name)
     # Snapshot only managed targets in memory, never read email/config/source directories.
     # All new bytes are staged and read back BEFORE replacing any live file.

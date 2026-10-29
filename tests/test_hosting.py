@@ -1,4 +1,5 @@
 import importlib.util, io, json, sys, unittest, ftplib
+from contextlib import redirect_stderr
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
 from build_hosting import build
@@ -51,6 +52,13 @@ class HostingTests(unittest.TestCase):
  def test_remote_manual_edit_refused(self):
   ftp=FTP(self.files);ftp.files['index.html']=b'manual edit'
   with self.assertRaises(ValueError):deploy(ftp,self.files,self.meta)
+ def test_collision_diagnostic_names_only_the_target_not_its_contents(self):
+  ftp=FTP({'index.html':b'private-value-never-log'})
+  output=io.StringIO()
+  with redirect_stderr(output),self.assertRaises(ValueError):deploy(ftp,self.files,self.meta,'wrong-hash-never-log')
+  report=output.getvalue()
+  self.assertIn('target=index.html',report);self.assertIn('approval_hash_matches=false',report)
+  self.assertNotIn('private-value-never-log',report);self.assertNotIn('wrong-hash-never-log',report)
  def test_existing_php_refused(self):
   ftp=FTP({'index.php':b'private config'})
   with self.assertRaises(ValueError):deploy(ftp,self.files,self.meta,check=True)
