@@ -64,6 +64,8 @@ jobs:
           python3 scripts/check_project.py
           node tests/test_center_server.cjs
           node tests/test_center_origin.cjs
+          node tests/test_center_production_origins.cjs
+          node tests/test_feedback_readable.cjs
           python3 -m unittest discover -s tests -p 'test_*.py'
           python3 scripts/build_hosting.py --revision '${{ steps.gate.outputs.revision }}' --output work/hosting
       - name: Select browser

@@ -23,6 +23,8 @@ jobs:
       - run: python3 scripts/check_project.py
       - run: node tests/test_center_server.cjs
       - run: node tests/test_center_origin.cjs
+      - run: node tests/test_center_production_origins.cjs
+      - run: node tests/test_feedback_readable.cjs
       - run: python3 -m unittest discover -s tests -p test_security.py
       - run: python3 -m unittest discover -s tests -p test_pages_build.py
       - run: python3 -m unittest discover -s tests -p test_hosting.py

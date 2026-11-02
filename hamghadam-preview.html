@@ -184,8 +184,18 @@ var Ow=Jf({rating:Wf().refine(e=>/^[1-5]$/.test(e),`لطفاً تجربه کلی
  features:[['price','قیمت حدودی خدمات'],['reviews','نظر و تجربه خانواده‌های دیگه'],['license','اطلاعات مجوز و اعتبار مراکز'],['compare','مقایسه چند مرکز با هم'],['availability','اطلاع از زمان‌های در دسترس'],['caregivers','معرفی مراقب‌های هر مرکز'],['booking','رزرو آنلاین خدمات'],['matching','پیشنهاد مرکز متناسب با نیازم'],['services','اطلاعات کامل‌تر درباره خدمات'],['callback','امکان درخواست تماس از مرکز']]
 };
 function HamghadamFeedbackEmpty(){return {rating:'',intent:'',outcome:'',reasons:[],other:'',features:[],notes:''};}
-// Preserve the deployed endpoint's three-field contract; all new answers live in its existing text column.
-function HamghadamFeedbackPayload(v){return {rating:Number(v.rating),requestedFeatures:[],customFeedback:JSON.stringify({schemaVersion:2,intent:v.intent||null,outcome:v.outcome||null,barriers:v.outcome==='partial'||v.outcome==='no'?v.reasons:[],barrierOther:(v.outcome==='partial'||v.outcome==='no')&&v.reasons.includes('other')?v.other.trim():'',requestedFeatures:v.features,notes:v.notes.trim()})};}
+// Preserve the deployed endpoint contract; store labeled Persian text rather than internal enum JSON.
+function HamghadamFeedbackReadable(v){
+ const label=(group,id)=>HamghadamFeedbackOptions[group].find(option=>option[0]===id)?.[1]||'انتخاب نشده';
+ const lines=['نیاز کاربر: '+label('intent',v.intent),'نتیجه جست‌وجو: '+label('outcome',v.outcome)];
+ const barriers=(v.outcome==='partial'||v.outcome==='no')&&Array.isArray(v.reasons)?v.reasons:[];
+ if(barriers.length)lines.push('دلیل‌ها: '+barriers.map(id=>label('reasons',id)).join('، '));
+ if(barriers.includes('other')&&v.other.trim())lines.push('توضیح مشکل: '+v.other.trim());
+ lines.push('قابلیت‌های درخواستی: '+(v.features.length?v.features.map(id=>label('features',id)).join('، '):'انتخاب نشده'));
+ if(v.notes.trim())lines.push('توضیحات کاربر: '+v.notes.trim());
+ return lines.join('\n');
+}
+function HamghadamFeedbackPayload(v){return {rating:Number(v.rating),requestedFeatures:[],customFeedback:HamghadamFeedbackReadable(v)};}
 // One rendering primitive for feedback and intake; IDs and selection semantics stay native.
 function HamghadamChoiceChips({options,value,onChange,name,label,multiple=false,disabled=false}){
  const e=C.createElement;

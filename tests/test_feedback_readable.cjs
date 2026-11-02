@@ -1,0 +1,12 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const source=fs.readFileSync('src/app.js','utf8');
+const start=source.indexOf('const HamghadamFeedbackOptions='),end=source.indexOf('// One rendering primitive',start);
+assert(start>=0&&end>start);const c=vm.createContext({});vm.runInContext(source.slice(start,end),c);
+const empty={rating:'3',intent:'',outcome:'',reasons:[],other:'',features:[],notes:''};
+let payload=c.HamghadamFeedbackPayload({...empty,intent:'elder',outcome:'partial',reasons:['price','other'],other:'  توضیح مشکل  ',features:['price','callback'],notes:'=SUM(A1:A2)'});
+assert.equal(payload.rating,3);assert.equal(payload.requestedFeatures.length,0);
+for(const text of ['مراقب برای سالمند','تا حدی','قیمت خدمات مشخص نبود','توضیح مشکل','قیمت حدودی خدمات','امکان درخواست تماس از مرکز','توضیحات کاربر: =SUM(A1:A2)'])assert(payload.customFeedback.includes(text),text);
+assert(!payload.customFeedback.includes('schemaVersion'));assert(!payload.customFeedback.startsWith('='));assert(!payload.customFeedback.includes('"intent"'));
+payload=c.HamghadamFeedbackPayload({...empty,outcome:'yes',reasons:['other'],other:'نباید ثبت شود'});assert(!payload.customFeedback.includes('نباید ثبت شود'));assert(!payload.customFeedback.includes('دلیل‌ها:'));
+payload=c.HamghadamFeedbackPayload({...empty,features:['price','reviews','license','compare','availability','caregivers','booking','matching','services','callback'],notes:'ی'.repeat(1000)});assert(payload.customFeedback.length<3000);
+console.log('PASS: Persian readable feedback, all selected labels, preserved notes, hidden conditional answers excluded, existing endpoint contract and size limit preserved.');

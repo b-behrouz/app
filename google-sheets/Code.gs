@@ -18,12 +18,27 @@ function setupCenterRequests() {
     }
     assertCenterHeaders_(sheet);
     const properties = PropertiesService.getScriptProperties();
-    if (!properties.getProperty('ALLOWED_ORIGINS'))
-      properties.setProperty('ALLOWED_ORIGINS', 'https://b-behrouz.github.io,https://hamghadamcare.ir,https://www.hamghadamcare.ir');
+    ensureCenterProductionOrigins_(properties);
     if (!properties.getProperty('ALLOW_LOCAL_PREVIEW'))
       properties.setProperty('ALLOW_LOCAL_PREVIEW', 'false');
     return 'Ready: ' + CENTER_TAB;
   } finally { lock.releaseLock(); }
+}
+
+/** Add the actual production origins without removing other configured origins.
+ * Properties are read on every POST, so this repair needs no web-app redeployment.
+ */
+function ensureCenterProductionOrigins_(properties) {
+  const existing = (properties.getProperty('ALLOWED_ORIGINS') || 'https://b-behrouz.github.io')
+    .split(',').map(value => value.trim()).filter(Boolean);
+  const merged = Array.from(new Set(existing.concat(['https://hamghadamcare.ir', 'https://www.hamghadamcare.ir'])));
+  properties.setProperty('ALLOWED_ORIGINS', merged.join(','));
+  return merged;
+}
+/** Run once in the existing center-service project to repair production policy. */
+function enableProductionCenterOrigin() {
+  const origins = ensureCenterProductionOrigins_(PropertiesService.getScriptProperties());
+  return { serviceVersion: CENTER_SERVICE_VERSION, allowedOrigins: origins };
 }
 
 function doPost(event) {
