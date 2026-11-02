@@ -22,7 +22,7 @@ jobs:
       - name: Materialize exact approved expected HTML
         run: |
           mkdir -p work
-          git show 081ca34056de8a659696c53f382409582c6b36e3:hamghadam-preview.html > work/approved-live-index.html
+          git show 0370fdee7f37cbe43d663e026e7981b47a87536e:hamghadam-preview.html > work/approved-live-index.html
       - name: Select browser
         run: |
           runner_chrome=$(command -v google-chrome || command -v chromium || true)
