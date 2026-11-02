@@ -77,7 +77,9 @@ jobs:
           fi
       - name: Verify production bundle before upload
         if: steps.gate.outputs.ready == 'true' && steps.gate.outputs.operation != 'check'
-        run: node tests/test_hosting_browser.cjs
+        run: |
+          node tests/test_advanced_filters.cjs
+          node tests/test_hosting_browser.cjs
       - name: Retrieve verified initial backup (if supplied)
         if: steps.gate.outputs.ready == 'true' && inputs.backup_run_id != '' && steps.gate.outputs.operation == 'deploy'
         uses: actions/download-artifact@v4

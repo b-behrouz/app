@@ -9,7 +9,7 @@ const root=path.resolve(process.env.HAMGHADAM_HOSTING_DIR||'work/hosting');
    const f=path.resolve(root,relative);if(!f.startsWith(root+path.sep))return r.abort();
    return r.fulfill({status:fs.existsSync(f)?200:404,contentType:'text/html',body:fs.readFileSync(fs.existsSync(f)?f:path.join(root,'404.html'))});
   });const p=await c.newPage();const errors=[];p.on('pageerror',e=>errors.push(e.message));
-  await p.goto('https://hosting.test/');await p.locator('.hero-heading').waitFor();assert(Number(await p.locator('#center-search-results').getAttribute('data-result-count'))>0);
+  await p.goto('https://hosting.test/');await p.locator('[data-home-ready=true]').waitFor();assert(Number(await p.locator('#center-search-results').getAttribute('data-result-count'))>0);
   await p.locator('input[type=search]').fill('zzzznotfound');await p.locator('#center-search-results[data-result-count="0"]').waitFor();
   for(const route of ['feedback','introduce-center','centers/ibn-sina-mashhad']){
    await p.goto('https://hosting.test/'+route+'/');await p.waitForURL('https://hosting.test/#/'+route);await p.reload();

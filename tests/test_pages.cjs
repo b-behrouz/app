@@ -22,18 +22,18 @@ const base='https://pages.test'+manifest.base_path;
     if(!fs.existsSync(file)){file=path.resolve('404.html');status=404}
     statusCodes.push(status);return route.fulfill({status,contentType:'text/html; charset=utf-8',body:fs.readFileSync(file)});
    });
-   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
-   await page.goto(base);await page.locator('.hero-gradient').waitFor();
+   const page=await context.newPage();page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));
+   await page.goto(base);await page.locator('[data-home-ready=true]').waitFor();
    assert(!(await page.locator('body').innerText()).includes('نسخهٔ مستقل محلی'));
    const originalCount=Number(await page.locator('#center-search-results').getAttribute('data-result-count'));
    assert(originalCount>0);
    await page.locator('input[type=search]').fill('zzzznonexistent');await page.waitForFunction(()=>document.querySelector('#center-search-results')?.dataset.resultCount==='0');
    await page.locator('input[type=search]').fill('');await page.waitForFunction(n=>Number(document.querySelector('#center-search-results')?.dataset.resultCount)===n,originalCount);
-   await page.getByRole('button',{name:'فیلترها',exact:true}).click();let dialog=page.getByRole('dialog');
-   await dialog.getByText('پانسمان',{exact:true}).click();await dialog.getByRole('button',{name:'نمایش نتایج',exact:true}).click();
+   await page.getByRole('button',{name:'فیلتر پیشرفته',exact:true}).click();let dialog=page.getByRole('dialog');
+   await dialog.locator('.advanced-cards:not(.advanced-provider-cards) label').nth(3).click();await dialog.getByText('پانسمان و مراقبت زخم',{exact:true}).click();await dialog.getByRole('button',{name:/^مشاهده/}).click();
    await page.waitForFunction(n=>{const count=Number(document.querySelector('#center-search-results')?.dataset.resultCount);return count>0&&count<n},originalCount);
-   await page.getByRole('button',{name:'فیلترها',exact:true}).click();dialog=page.getByRole('dialog');
-   await dialog.getByRole('button',{name:'پاک کردن فیلترها',exact:true}).click();await dialog.getByRole('button',{name:'نمایش نتایج',exact:true}).click();
+   await page.getByRole('button',{name:'فیلتر پیشرفته',exact:true}).click();dialog=page.getByRole('dialog');
+   await dialog.getByRole('button',{name:'پاک کردن',exact:true}).click();await dialog.getByRole('button',{name:/^مشاهده/}).click();
    await page.waitForFunction(n=>Number(document.querySelector('#center-search-results')?.dataset.resultCount)===n,originalCount);
    // Existing HashRouter URLs remain under /app/ and survive a refresh.
    await page.locator('a[href^="#/centers/"]').first().click();assert(page.url().startsWith(base+'#/centers/'));
@@ -42,7 +42,7 @@ const base='https://pages.test'+manifest.base_path;
    await page.getByRole('region',{name:'گالری بزرگ تصاویر مرکز'}).waitFor();await page.keyboard.press('ArrowLeft');await page.keyboard.press('Escape');
    // Clean direct links have real directory indexes; no 404 fallback is needed.
    for(const route of ['/centers/ibn-sina-mashhad','/need','/feedback','/introduce-center']){
-    await page.goto(base+route.slice(1)+'/');await page.waitForURL(base+'#'+route);await page.reload();
+    await page.goto(base+route.slice(1)+'/');if(route==='/need'){await page.getByRole('dialog').waitFor();await page.keyboard.press('Escape');continue;}await page.waitForURL(base+'#'+route);await page.reload();
     assert(page.url().startsWith(base+'#'+route));
     if(route==='/feedback')await page.locator('.feedback-form').waitFor();
     if(route==='/introduce-center'){
@@ -50,11 +50,11 @@ const base='https://pages.test'+manifest.base_path;
      await page.locator('.center-referral-form button[type=submit]').click();await page.getByText('نام مرکز خدمات پرستاری را وارد کنید.',{exact:true}).waitFor();
     }
    }
-   await page.goto(base);await page.getByRole('button',{name:'پشتیبانی',exact:true}).click();await page.getByRole('dialog').waitFor();await page.keyboard.press('Escape');
+   await page.goto(base);assert.equal(await page.locator('.hamghadam-bottom-nav a').count(),4);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
    assert.deepEqual(errors,[]);assert(!statusCodes.includes(404),'Known routes returned 404');
    await page.evaluate(()=>document.fonts.ready);fs.mkdirSync('work/qa',{recursive:true});await page.screenshot({path:`work/qa/${name}-pages.png`});
-   console.log(`PASS ${name}: /app/ homepage, search, applied filters, profile/gallery, forms, support, clean deep links and reload; no known-route 404s.`);
+   console.log(`PASS ${name}: /app/ homepage, search, applied filters, profile/gallery, forms, bottom navigation, clean deep links and reload; no known-route 404s.`);
    await context.close();
   }
  }finally{await browser.close()}

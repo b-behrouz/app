@@ -41,6 +41,7 @@ jobs:
       - run: node tests/test_form_alerts.cjs
       - run: node tests/test_local_preview.cjs
       - run: node tests/test_pages.cjs
+      - run: node tests/test_advanced_filters.cjs
       - run: node tests/test_hosting_browser.cjs
       - name: Verify actual live Pages URL after publication
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'

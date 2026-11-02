@@ -1,9 +1,9 @@
 
 /* Palette only; existing content, geometry and interactions stay intact. */
 .centers-scroll > .hero-gradient {
-  --hero-from: #F2F7FD;
-  --hero-mid: #EAF2FC;
-  --hero-to: #E3EDF9;
-  --tw-ring-color: #182D5326;
+  --hero-from: #FFF8FA;
+  --hero-mid: #FCEFF4;
+  --hero-to: #F8E5ED;
+  --tw-ring-color: #AE234826;
 }
-.centers-scroll > .hero-gradient .hero-heading { color: #182D53; }
+.centers-scroll > .hero-gradient .hero-heading { color: #AE2348; }

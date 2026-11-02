@@ -36,11 +36,11 @@ const source=fs.readFileSync('hamghadam-preview.html','utf8');
  let h=await harness();let p=h.page;await p.locator('button[type=submit]').click();await p.getByText('نام مرکز خدمات پرستاری را وارد کنید.',{exact:true}).waitFor();assert.equal(h.posts(),0);
  await h.fill();h.setMode('delay');
  await p.locator('form.center-referral-form').evaluate(form=>{form.requestSubmit();form.requestSubmit()});
- await p.getByRole('button',{name:'در حال ثبت اطلاعات…'}).waitFor();assert(await p.locator('[name=name]').isDisabled());
+ await p.getByRole('button',{name:'در حال ثبت...'}).waitFor();assert(await p.locator('[name=name]').isDisabled());
  assert.equal(await p.getByText('اطلاعات مرکز با موفقیت ثبت شد و در انتظار بررسی است.',{exact:true}).count(),0);
  await p.getByText('اطلاعات مرکز با موفقیت ثبت شد و در انتظار بررسی است.',{exact:true}).waitFor();
- assert.equal(h.posts(),1);assert.equal(h.rows().length,2);assert(await p.getByRole('button',{name:'اطلاعات ثبت شد',exact:true}).isDisabled());
- assert.equal(await p.locator('iframe[name^=center-]').count(),0);assert.equal(await p.locator('[name=name]').inputValue(),'مرکز آزمایشی');
+ assert.equal(h.posts(),1);assert.equal(h.rows().length,2);assert(!(await p.locator('button[type=submit]').isDisabled()));
+ assert.equal(await p.locator('iframe[name^=center-]').count(),0);assert.equal(await p.locator('[name=name]').inputValue(),'');
  console.log('PASS browser: unchanged validation; real cross-origin form POST; nested iframe acknowledgment; wrong nonce ignored; pending fields/button locked; double submit blocked; success only after persistence; cleanup.');
  assert.deepEqual(h.errors,[]);await h.context.close();
  // A write completed but its acknowledgment was lost. Retry must use the same ID.
