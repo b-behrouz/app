@@ -145,7 +145,7 @@ function tS(){
  return next;
  });setError('');};
  const section=(title,body)=>e('section',{className:'advanced-section'},e('h3',null,title),body);
- const chips=(options,key,multiple=false)=>e('div',{className:'advanced-chips'},options.map(o=>{const checked=multiple?a[key].includes(o.id):a[key]===o.id;return e('label',{key:o.id,className:'advanced-chip','data-selected':checked},e('input',{type:multiple?'checkbox':'radio',name:'advanced-'+key,checked,onChange:()=>change(key,multiple?(checked?a[key].filter(v=>v!==o.id):[...a[key],o.id]):o.id)}),o.label);}));
+ const chips=(options,key,multiple=false)=>e('div',{className:'advanced-chips'},options.map(o=>{const checked=multiple?a[key].includes(o.id):a[key]===o.id;return e('label',{key:o.id,className:'advanced-chip','data-selected':checked},e('input',{type:multiple?'checkbox':'radio',name:'advanced-'+key,checked,onChange:()=>change(key,multiple?(checked?a[key].filter(v=>v!==o.id):[...a[key],o.id]):o.id)}),e('span',null,o.label));}));
  const icons=[HamghadamHugeicons.ClinicIcon,HamghadamHugeicons.Hospital01Icon,HamghadamHugeicons.Home01Icon,HamghadamHugeicons.StethoscopeIcon,HamghadamHugeicons.InformationCircleIcon];
  const labels=['سالمند','بیمار','کودک','خدمات پرستاری','هنوز مطمئن نیستم'];
  const submit=ev=>{ev.preventDefault();if(isCare&&a.start==='date'&&(!a.date||a.date<HamghadamIranDate())){setError('یک تاریخ از امروز به بعد انتخاب کن.');return;}s.setFilters(gp());s.setGuide({...HamghadamGuideEmpty(),answers:isCare?a:HamghadamGuideEmpty().answers,applied:isCare?{...a,tasks:[...a.tasks]}:null,directory:{category,area:isCare?'':area}});s.setFilterOpen(false);navigate({pathname:'/',search:category==='care'?'':'?category='+category},{state:{needsApplied:true}});requestAnimationFrame(()=>document.getElementById('centers-heading')?.scrollIntoView({behavior:'smooth',block:'start'}));};
@@ -157,7 +157,7 @@ function tS(){
  isCare?e(C.Fragment,null,
  section('برای چه کسی دنبال مراقبتی؟',e('div',{className:'advanced-cards'},HamghadamGuideServices.map((o,i)=>e('label',{key:o.id,'data-selected':a.service===o.id},e('input',{type:'radio',name:'advanced-service',checked:a.service===o.id,onClick:ev=>{if(a.service===o.id){ev.preventDefault();change('service','');}},onChange:()=>change('service',o.id)}),e(HamghadamHugeicons.HugeiconsIcon,{icon:icons[i]||HamghadamHugeicons.Home01Icon,size:25,strokeWidth:1.6,'aria-hidden':true}),e('span',null,labels[i]))))),
  a.service&&a.service!=='unsure'&&e('section',{key:a.service,className:'advanced-section advanced-services'},e('h3',null,'چه کمک‌هایی لازم داری؟'),chips(HamghadamGuideTaskOptions(a.service),'tasks',true)),
- section('چه زمانی نیاز داری؟',e('div',{className:'advanced-radios'},HamghadamGuideShifts.map(o=>e('label',{key:o.id},e('input',{type:'radio',name:'advanced-shift',checked:a.shift===o.id,onChange:()=>change('shift',o.id)}),o.label)))),
+ section('چه زمانی نیاز داری؟',e('div',{className:'advanced-radios'},HamghadamGuideShifts.map(o=>e('label',{key:o.id},e('input',{type:'radio',name:'advanced-shift',checked:a.shift===o.id,onChange:()=>change('shift',o.id)}),e('span',null,o.label))))),
  section('از چه زمانی؟',e(C.Fragment,null,chips(HamghadamGuideStarts,'start'),a.start==='date'&&e(HamghadamPersianDatePicker,{value:a.date,onChange:v=>change('date',v),invalid:!!error}),error&&e('p',{role:'alert'},error))),
  section('کدام محدوده مشهد؟',e(C.Fragment,null,e(cb,{'aria-label':'نام محله (اختیاری)',placeholder:'نام محله رو بنویس (اختیاری)',value:a.neighborhood,onChange:ev=>change('neighborhood',ev.target.value)}),e('p',{className:'advanced-hint'},'زمان حضور، تاریخ شروع، محله و جزئیات تأییدنشدهٔ خدمات، نتایج را محدود نمی‌کنند؛ برای هماهنگی با مرکز تماس بگیر.')))):section('کدام محدوده مشهد؟',e(C.Fragment,null,e(cb,{'aria-label':'جست‌وجوی محدوده در نشانی',placeholder:'نام محدوده یا خیابان',value:area,onChange:ev=>setArea(ev.target.value)}),e('p',{className:'advanced-hint'},'تطبیق با نشانی ثبت‌شده انجام می‌شود؛ محدودهٔ پوشش خدمات نیست. تخصص و ساعات فعالیت تأییدشده در داده‌ها موجود نیست.')))),
  e(vy,{className:'advanced-footer'},e(Um,{type:'submit',form:'advanced-form',disabled:count===null},count===null?'در حال بررسی...':'مشاهده '+bp(count)+' '+({care:'مرکز',nurses:'پرستار',hospitals:'بیمارستان',pharmacies:'داروخانه'}[category])),e(Um,{variant:'outline',onClick:()=>{setA(HamghadamGuideEmpty().answers);setArea('');setError('');}},'پاک کردن'))));
@@ -1691,4 +1691,17 @@ button.home-category { cursor:pointer; }
 .app-shell [data-slot=button][data-primary-action=true]:not(:disabled):not([aria-disabled=true]):active{background:color-mix(in srgb,var(--primary) 88%,black)!important}
 .app-shell [data-slot=button][data-primary-action=true]:focus-visible{outline:2px solid var(--ring);outline-offset:3px;box-shadow:none}
 .app-shell [data-slot=button][data-primary-action=true]:disabled,.app-shell [data-slot=button][data-primary-action=true][aria-disabled=true]{opacity:.5;cursor:not-allowed}
+</style><style>
+/* Uniform advanced-filter controls and mobile navigation inset. */
+.advanced-sheet{--filter-option-height:48px;--filter-option-gap:8px;--filter-option-radius:10px}
+.advanced-cards,.advanced-chips,.advanced-radios{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--filter-option-gap)}
+.advanced-cards>label,.advanced-cards>label:last-child,.advanced-chip,.advanced-radios label{box-sizing:border-box;height:var(--filter-option-height);min-height:var(--filter-option-height);max-height:var(--filter-option-height);min-width:0;padding:6px 8px;gap:6px;border-width:1px;border-radius:var(--filter-option-radius);font-size:12px;font-weight:500;line-height:16px;white-space:normal}
+.advanced-cards>label>span,.advanced-chip>span,.advanced-radios label>span{min-width:0;white-space:normal;overflow-wrap:normal}
+.advanced-cards svg{width:22px;height:22px;flex-shrink:0}
+.advanced-chip input,.advanced-radios input{flex-shrink:0}
+.advanced-footer{--primary-action-height:48px}
+.app-shell .advanced-footer>[data-slot=button]{box-sizing:border-box;height:48px!important;min-height:48px!important;max-height:48px;font-size:12px!important;line-height:16px;border-radius:10px;padding:6px 8px}
+.app-shell{--bottom-nav-safe-area:env(safe-area-inset-bottom,0px);--bottom-nav-height:calc(80px + var(--bottom-nav-safe-area))}
+.hamghadam-bottom-nav{box-sizing:border-box;height:var(--bottom-nav-height);min-height:var(--bottom-nav-height);align-items:stretch;padding:8px 0 calc(12px + var(--bottom-nav-safe-area))}
+.hamghadam-bottom-nav>a{box-sizing:border-box;min-height:0;height:100%;justify-content:center;padding:0 2px;gap:6px}
 </style></head><body><div id="root"></div></body></html>
