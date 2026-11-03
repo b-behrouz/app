@@ -1,0 +1,865 @@
+{
+  "records": [
+    {
+      "id": "mashhad-pharmacy-ghasemian",
+      "name": "داروخانه دکتر قاسمیان",
+      "city": "مشهد",
+      "address": "مشهد، بلوار سجاد، بین سجاد ۳ و ۵",
+      "phone": "05137631012",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر قاسمیان در بلوار سجاد، بین سجاد ۳ و ۵ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": null,
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/ghasemian-1.jpg",
+          "alt": "داروخانه دکتر قاسمیان، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-barazandeh",
+      "name": "داروخانه دکتر برازنده",
+      "city": "مشهد",
+      "address": "مشهد، بلوار الهیه، محدوده میدان ولیعصر",
+      "phone": "05135240043",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر برازنده در بلوار الهیه، محدوده میدان ولیعصر مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": null,
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/barazandeh-1.jpg",
+          "alt": "داروخانه دکتر برازنده، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        },
+        {
+          "path": "images/barazandeh-2.jpg",
+          "alt": "داروخانه دکتر برازنده، نمای داروخانه",
+          "width": 700,
+          "height": 545
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-sadeghian",
+      "name": "داروخانه دکتر صادقیان",
+      "city": "مشهد",
+      "address": "مشهد، قاسم‌آباد، بلوار اندیشه، نبش اندیشه ۳۵",
+      "phone": "05136570936",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر صادقیان در قاسم‌آباد، بلوار اندیشه، نبش اندیشه ۳۵ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/sadeghian-1.jpg",
+          "alt": "داروخانه دکتر صادقیان، نمای داروخانه",
+          "width": 700,
+          "height": 545
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-haqi",
+      "name": "داروخانه دکتر عماد حقی",
+      "city": "مشهد",
+      "address": "مشهد، ابتدای بلوار پیروزی، محدوده میدان شهید کاوه",
+      "phone": "05138763043",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر عماد حقی در ابتدای بلوار پیروزی، محدوده میدان شهید کاوه مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/haqi-1.jpg",
+          "alt": "داروخانه دکتر عماد حقی، نمای داروخانه",
+          "width": 700,
+          "height": 640
+        },
+        {
+          "path": "images/haqi-2.jpg",
+          "alt": "داروخانه دکتر عماد حقی، نمای داروخانه",
+          "width": 700,
+          "height": 545
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-sojoodi",
+      "name": "داروخانه دکتر سجودی",
+      "city": "مشهد",
+      "address": "مشهد، میدان سعدی، ابتدای خیابان سناباد، سناباد ۲",
+      "phone": "05137277143",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر سجودی در میدان سعدی، ابتدای خیابان سناباد، سناباد ۲ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": null,
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/sojoodi-1.jpg",
+          "alt": "داروخانه دکتر سجودی، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-ghashamsham",
+      "name": "داروخانه دکتر قشمشم",
+      "city": "مشهد",
+      "address": "مشهد، بلوار دستغیب، بین دستغیب ۱۷ و ۱۹",
+      "phone": "05137676880",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر قشمشم در بلوار دستغیب، بین دستغیب ۱۷ و ۱۹ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/ghashamsham-1.jpg",
+          "alt": "داروخانه دکتر قشمشم، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-nowrouzi-aref",
+      "name": "داروخانه دکتر نوروزی ـ عارف",
+      "city": "مشهد",
+      "address": "مشهد، احمدآباد، خیابان عارف، بین عارف ۲ و ۴، ساختمان حکیم",
+      "phone": "05138409866",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر نوروزی ـ عارف در احمدآباد، خیابان عارف، بین عارف ۲ و ۴، ساختمان حکیم مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": null,
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/nowrouzi-aref-1.jpg",
+          "alt": "داروخانه دکتر نوروزی ـ عارف، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        },
+        {
+          "path": "images/nowrouzi-aref-2.jpg",
+          "alt": "داروخانه دکتر نوروزی ـ عارف، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-cheraghi",
+      "name": "داروخانه دکتر چراغی",
+      "city": "مشهد",
+      "address": "مشهد، بلوار سجاد، پلاک ۴۷۲",
+      "phone": "05136023017",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر چراغی در بلوار سجاد، پلاک ۴۷۲ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": {
+        "rating": 4.1,
+        "scale": 5,
+        "count": 52,
+        "texts": []
+      },
+      "photos": [
+        {
+          "path": "images/cheraghi-1.jpg",
+          "alt": "داروخانه دکتر چراغی، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        },
+        {
+          "path": "images/cheraghi-2.jpg",
+          "alt": "داروخانه دکتر چراغی، نمای داروخانه",
+          "width": 700,
+          "height": 524
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-bastan",
+      "name": "داروخانه دکتر باستان",
+      "city": "مشهد",
+      "address": "مشهد، خیابان فداییان اسلام، نرسیده به چهارراه نخریسی",
+      "phone": "05138554158",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر باستان در خیابان فداییان اسلام، نرسیده به چهارراه نخریسی مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/bastan-1.jpg",
+          "alt": "داروخانه دکتر باستان، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        },
+        {
+          "path": "images/bastan-2.jpg",
+          "alt": "داروخانه دکتر باستان، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-hashemi",
+      "name": "داروخانه دکتر هاشمی",
+      "city": "مشهد",
+      "address": "مشهد، بلوار طبرسی جنوبی، بین المهدی و بلوار نبوت",
+      "phone": "05132728398",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر هاشمی در بلوار طبرسی جنوبی، بین المهدی و بلوار نبوت مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/hashemi-1.jpg",
+          "alt": "داروخانه دکتر هاشمی، نمای داروخانه",
+          "width": 700,
+          "height": 545
+        },
+        {
+          "path": "images/hashemi-2.jpg",
+          "alt": "داروخانه دکتر هاشمی، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-mousavi",
+      "name": "داروخانه دکتر موسوی",
+      "city": "مشهد",
+      "address": "مشهد، بلوار امامیه، نبش امامیه ۵۸",
+      "phone": "05136213510",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر موسوی در بلوار امامیه، نبش امامیه ۵۸ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/mousavi-1.jpg",
+          "alt": "داروخانه دکتر موسوی، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-mehrafshan",
+      "name": "داروخانه دکتر مهرافشان",
+      "city": "مشهد",
+      "address": "مشهد، بلوار شهید فلاحی، بین فلاحی ۸ و ۱۰",
+      "phone": "05135220520",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر مهرافشان در بلوار شهید فلاحی، بین فلاحی ۸ و ۱۰ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": null,
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/mehrafshan-1.jpg",
+          "alt": "داروخانه دکتر مهرافشان، نمای داروخانه",
+          "width": 700,
+          "height": 574
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-hatami",
+      "name": "داروخانه دکتر حاتمی",
+      "city": "مشهد",
+      "address": "مشهد، بلوار پیروزی، محدوده پیروزی ۶۳ تا ۶۷",
+      "phone": "05138657638",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر حاتمی در بلوار پیروزی، محدوده پیروزی ۶۳ تا ۶۷ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/hatami-1.jpg",
+          "alt": "داروخانه دکتر حاتمی، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-22bahman-daneshgah",
+      "name": "داروخانه ۲۲ بهمن ـ دانشگاه",
+      "city": "مشهد",
+      "address": "مشهد، خیابان دانشگاه، نبش دانشگاه ۱۶",
+      "phone": "05138598014",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه ۲۲ بهمن ـ دانشگاه در خیابان دانشگاه، نبش دانشگاه ۱۶ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/22bahman-daneshgah-1.jpg",
+          "alt": "داروخانه ۲۲ بهمن ـ دانشگاه، نمای داروخانه",
+          "width": 700,
+          "height": 545
+        },
+        {
+          "path": "images/22bahman-daneshgah-2.jpg",
+          "alt": "داروخانه ۲۲ بهمن ـ دانشگاه، نمای داروخانه",
+          "width": 700,
+          "height": 591
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-markazi-emam",
+      "name": "داروخانه مرکزی امام",
+      "city": "مشهد",
+      "address": "مشهد، میدان بیمارستان امام رضا، خیابان ابن‌سینا",
+      "phone": "05138541011",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه مرکزی امام در میدان بیمارستان امام رضا، خیابان ابن‌سینا مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شبانه‌روزی",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/markazi-emam-1.jpg",
+          "alt": "داروخانه مرکزی امام، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        },
+        {
+          "path": "images/markazi-emam-2.jpg",
+          "alt": "داروخانه مرکزی امام، نمای داروخانه",
+          "width": 700,
+          "height": 585
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-fakour",
+      "name": "داروخانه دکتر فکور ـ داروپست",
+      "city": "مشهد",
+      "address": "مشهد، بلوار کلاهدوز، بین کلاهدوز ۲۹ و ۳۱",
+      "phone": "05137128570",
+      "additional_phones": [],
+      "website": "https://daroopost.com/",
+      "introduction": "داروخانه دکتر فکور ـ داروپست در بلوار کلاهدوز، بین کلاهدوز ۲۹ و ۳۱ مشهد قرار دارد.",
+      "services": [
+        "مکمل‌های غذایی",
+        "محصولات پوست و مو",
+        "محصولات مادر و کودک",
+        "تجهیزات پزشکی"
+      ],
+      "opening_hours": "شنبه تا پنجشنبه: ۰۸:۰۰ تا ۱۴:۰۰ و ۱۷:۰۰ تا ۲۲:۰۰؛ جمعه نامشخص",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/fakour-1.jpg",
+          "alt": "داروخانه دکتر فکور ـ داروپست، نمای داروخانه",
+          "width": 640,
+          "height": 640
+        },
+        {
+          "path": "images/fakour-2.jpg",
+          "alt": "داروخانه دکتر فکور ـ داروپست، نمای داروخانه",
+          "width": 700,
+          "height": 517
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-mehran",
+      "name": "داروخانه دکتر مهران",
+      "city": "مشهد",
+      "address": "مشهد، بلوار پیروزی، روبه‌روی پیروزی ۳۴، پلاک ۱۷۵",
+      "phone": "05138815441",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر مهران در بلوار پیروزی، روبه‌روی پیروزی ۳۴، پلاک ۱۷۵ مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": "شنبه تا پنجشنبه: ۰۸:۰۰ تا ۱۴:۰۰ و ۱۶:۳۰ تا ۲۱:۳۰؛ جمعه نامشخص",
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/mehran-1.jpg",
+          "alt": "داروخانه دکتر مهران، نمای داروخانه",
+          "width": 700,
+          "height": 1556
+        },
+        {
+          "path": "images/mehran-2.jpg",
+          "alt": "داروخانه دکتر مهران، نمای داروخانه",
+          "width": 700,
+          "height": 1356
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-vahidi-manesh",
+      "name": "داروخانه دکتر وحیدی‌منش",
+      "city": "مشهد",
+      "address": "مشهد، بلوار حجاب، نبش حجاب ۵۴، مجتمع پزشکان غرب مشهد",
+      "phone": "05136234800",
+      "additional_phones": [],
+      "website": null,
+      "introduction": "داروخانه دکتر وحیدی‌منش در بلوار حجاب، نبش حجاب ۵۴، مجتمع پزشکان غرب مشهد مشهد قرار دارد.",
+      "services": [],
+      "opening_hours": null,
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/vahidi-manesh-1.jpg",
+          "alt": "داروخانه دکتر وحیدی‌منش، نمای داروخانه",
+          "width": 700,
+          "height": 525
+        },
+        {
+          "path": "images/vahidi-manesh-2.jpg",
+          "alt": "داروخانه دکتر وحیدی‌منش، نمای داروخانه",
+          "width": 700,
+          "height": 1244
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-toozandehjani",
+      "name": "داروخانه دکتر توزنده‌جانی ـ فارماسی",
+      "city": "مشهد",
+      "address": "مشهد، بلوار احمدآباد، احمدآباد ۴، بین عارف ۵ و ۷",
+      "phone": "05138405515",
+      "additional_phones": [],
+      "website": "https://pharma30.ir/",
+      "introduction": "داروخانه دکتر توزنده‌جانی ـ فارماسی در بلوار احمدآباد، احمدآباد ۴، بین عارف ۵ و ۷ مشهد قرار دارد.",
+      "services": [
+        "پذیرش نسخه آنلاین",
+        "داروهای ترکیبی",
+        "محصولات آرایشی و بهداشتی",
+        "مکمل‌های غذایی و ورزشی",
+        "تجهیزات پزشکی",
+        "محصولات ارتوپدی و توانبخشی",
+        "محصولات مادر و نوزاد"
+      ],
+      "opening_hours": null,
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/toozandehjani-1.jpg",
+          "alt": "داروخانه دکتر توزنده‌جانی ـ فارماسی، نمای داروخانه",
+          "width": 300,
+          "height": 225
+        },
+        {
+          "path": "images/toozandehjani-2.jpg",
+          "alt": "داروخانه دکتر توزنده‌جانی ـ فارماسی، نمای داروخانه",
+          "width": 300,
+          "height": 226
+        },
+        {
+          "path": "images/toozandehjani-3.jpg",
+          "alt": "داروخانه دکتر توزنده‌جانی ـ فارماسی، نمای داروخانه",
+          "width": 300,
+          "height": 225
+        },
+        {
+          "path": "images/toozandehjani-4.jpg",
+          "alt": "داروخانه دکتر توزنده‌جانی ـ فارماسی، نمای داروخانه",
+          "width": 300,
+          "height": 224
+        },
+        {
+          "path": "images/toozandehjani-5.jpg",
+          "alt": "داروخانه دکتر توزنده‌جانی ـ فارماسی، نمای داروخانه",
+          "width": 300,
+          "height": 224
+        }
+      ]
+    },
+    {
+      "id": "mashhad-pharmacy-noori-fard",
+      "name": "داروخانه دکتر نوری‌فرد",
+      "city": "مشهد",
+      "address": "مشهد، میدان بیمارستان امام رضا، برج پزشکی سیمرغ",
+      "phone": "09155673145",
+      "additional_phones": [
+        "0513145"
+      ],
+      "website": "https://davastore.ir/",
+      "introduction": "داروخانه دکتر نوری‌فرد در میدان بیمارستان امام رضا، برج پزشکی سیمرغ مشهد قرار دارد.",
+      "services": [
+        "فروش اینترنتی محصولات آرایشی و بهداشتی",
+        "مکمل‌های غذایی و ورزشی",
+        "لوازم و تجهیزات پزشکی",
+        "محصولات مادر و کودک"
+      ],
+      "opening_hours": null,
+      "user_reviews": null,
+      "photos": [
+        {
+          "path": "images/noori-fard-1.jpg",
+          "alt": "داروخانه دکتر نوری‌فرد، نمای داخلی",
+          "width": 700,
+          "height": 525
+        },
+        {
+          "path": "images/noori-fard-2.jpg",
+          "alt": "داروخانه دکتر نوری‌فرد، نمای داخلی",
+          "width": 700,
+          "height": 525
+        }
+      ]
+    }
+  ],
+  "mapping": [
+    {
+      "input_id": "mashhad-pharmacy-ghasemian",
+      "runtime_id": "mashhad-pharmacy-ghasemian",
+      "photos": 1
+    },
+    {
+      "input_id": "mashhad-pharmacy-barazandeh",
+      "runtime_id": "mashhad-pharmacy-barazandeh",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-sadeghian",
+      "runtime_id": "mashhad-pharmacy-sadeghian",
+      "photos": 1
+    },
+    {
+      "input_id": "mashhad-pharmacy-haqi",
+      "runtime_id": "mashhad-pharmacy-haqi",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-sojoodi",
+      "runtime_id": "mashhad-pharmacy-sojoodi",
+      "photos": 1
+    },
+    {
+      "input_id": "mashhad-pharmacy-ghashamsham",
+      "runtime_id": "mashhad-pharmacy-ghashamsham",
+      "photos": 1
+    },
+    {
+      "input_id": "mashhad-pharmacy-nowrouzi-aref",
+      "runtime_id": "mashhad-pharmacy-nowrouzi-aref",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-cheraghi",
+      "runtime_id": "mashhad-pharmacy-cheraghi",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-bastan",
+      "runtime_id": "mashhad-pharmacy-bastan",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-hashemi",
+      "runtime_id": "mashhad-pharmacy-hashemi",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-mousavi",
+      "runtime_id": "mashhad-pharmacy-mousavi",
+      "photos": 1
+    },
+    {
+      "input_id": "mashhad-pharmacy-mehrafshan",
+      "runtime_id": "mashhad-pharmacy-mehrafshan",
+      "photos": 1
+    },
+    {
+      "input_id": "mashhad-pharmacy-hatami",
+      "runtime_id": "mashhad-pharmacy-hatami",
+      "photos": 1
+    },
+    {
+      "input_id": "mashhad-pharmacy-22bahman-daneshgah",
+      "runtime_id": "pharmacy-22-bahman",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-markazi-emam",
+      "runtime_id": "pharmacy-markazi-imam",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-fakour",
+      "runtime_id": "pharmacy-fakour",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-mehran",
+      "runtime_id": "mashhad-pharmacy-mehran",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-vahidi-manesh",
+      "runtime_id": "mashhad-pharmacy-vahidi-manesh",
+      "photos": 2
+    },
+    {
+      "input_id": "mashhad-pharmacy-toozandehjani",
+      "runtime_id": "mashhad-pharmacy-toozandehjani",
+      "photos": 5
+    },
+    {
+      "input_id": "mashhad-pharmacy-noori-fard",
+      "runtime_id": "mashhad-pharmacy-noori-fard",
+      "photos": 2
+    }
+  ],
+  "images": [
+    {
+      "id": "mashhad-pharmacy-ghasemian",
+      "path": "images/ghasemian-1.jpg",
+      "sha256": "db95b0cdd534c7ab5bed26ddf99e1b1b8e923f78d73ee5f7b4cee0b8e6fe4f5b",
+      "bytes": 39301
+    },
+    {
+      "id": "mashhad-pharmacy-barazandeh",
+      "path": "images/barazandeh-1.jpg",
+      "sha256": "c68676b2fe2eb7206ccea1ed2a4ba2adfd62be88a580d020cf7b595393981d38",
+      "bytes": 76305
+    },
+    {
+      "id": "mashhad-pharmacy-barazandeh",
+      "path": "images/barazandeh-2.jpg",
+      "sha256": "9bc7144334b00d4edee614830bf24c46d070cdb61c953e40fb73855b0b7d852f",
+      "bytes": 100565
+    },
+    {
+      "id": "mashhad-pharmacy-sadeghian",
+      "path": "images/sadeghian-1.jpg",
+      "sha256": "4cfbe6c1358f710d943dca3b026e485807678de93261fba582ba2dca2e268e52",
+      "bytes": 45731
+    },
+    {
+      "id": "mashhad-pharmacy-haqi",
+      "path": "images/haqi-1.jpg",
+      "sha256": "de6ab98dec76a23357c0d9ce0238b734c116258439ad9d00d50ab5889c6d1a54",
+      "bytes": 76308
+    },
+    {
+      "id": "mashhad-pharmacy-haqi",
+      "path": "images/haqi-2.jpg",
+      "sha256": "5fcb2062a6f4de5674016885920a7e7d543a3f07195625dd98fa434decf0014a",
+      "bytes": 47534
+    },
+    {
+      "id": "mashhad-pharmacy-sojoodi",
+      "path": "images/sojoodi-1.jpg",
+      "sha256": "c3c4d748edd20609eda019a8678a490bf2803bb4ed91c7eaeb0efd4e85d289b4",
+      "bytes": 54180
+    },
+    {
+      "id": "mashhad-pharmacy-ghashamsham",
+      "path": "images/ghashamsham-1.jpg",
+      "sha256": "301716af42ef966aa49eaf97e3d91988c2229bbe422a82d5c4b14ccaf23ea8ef",
+      "bytes": 68976
+    },
+    {
+      "id": "mashhad-pharmacy-nowrouzi-aref",
+      "path": "images/nowrouzi-aref-1.jpg",
+      "sha256": "1eb73c1e39872ad6db5e7853511c2bcf12d0d25060b48809540708490f19e881",
+      "bytes": 54783
+    },
+    {
+      "id": "mashhad-pharmacy-nowrouzi-aref",
+      "path": "images/nowrouzi-aref-2.jpg",
+      "sha256": "a51f79f219265b778f67a7bb46178d5e14f9b70da2de93e3b7a47570baa0b9e5",
+      "bytes": 91156
+    },
+    {
+      "id": "mashhad-pharmacy-cheraghi",
+      "path": "images/cheraghi-1.jpg",
+      "sha256": "d66e634f1d08b3323783a5ccbe40b58f5512f8ef4052e63e840e22817f74a6c8",
+      "bytes": 83208
+    },
+    {
+      "id": "mashhad-pharmacy-cheraghi",
+      "path": "images/cheraghi-2.jpg",
+      "sha256": "111bfbe60a1ed6771a3612cecf6d6324709fcd545a9eea805c3b2eb1064e5f3d",
+      "bytes": 60769
+    },
+    {
+      "id": "mashhad-pharmacy-bastan",
+      "path": "images/bastan-1.jpg",
+      "sha256": "80f8e037c2790e062f9df0d9c5dad8b2e13a5aa0e2c466ee287a0e3d218127f0",
+      "bytes": 49970
+    },
+    {
+      "id": "mashhad-pharmacy-bastan",
+      "path": "images/bastan-2.jpg",
+      "sha256": "cb00900d09491adaf182ff72965dde55a7710aa9700226054f25d62c9fcba564",
+      "bytes": 52425
+    },
+    {
+      "id": "mashhad-pharmacy-hashemi",
+      "path": "images/hashemi-1.jpg",
+      "sha256": "4d663c6867429051bf5483aeadc0f8f8ad46b65706f7fac45c734f5e8278dae5",
+      "bytes": 61048
+    },
+    {
+      "id": "mashhad-pharmacy-hashemi",
+      "path": "images/hashemi-2.jpg",
+      "sha256": "b700ce28867bacdcae10b9f75dc0a05db11e4f44236a4e534175276a1f2ce591",
+      "bytes": 43260
+    },
+    {
+      "id": "mashhad-pharmacy-mousavi",
+      "path": "images/mousavi-1.jpg",
+      "sha256": "bffbb04c0f35f8fc09e87bf4a4cde090ba6992cee00331d673bef9d42c8b8c45",
+      "bytes": 95713
+    },
+    {
+      "id": "mashhad-pharmacy-mehrafshan",
+      "path": "images/mehrafshan-1.jpg",
+      "sha256": "c7ad19e3b3d62a1f9cb0511c384c5e934e5ad10e118f82e69d4fb1ccd40b419b",
+      "bytes": 48654
+    },
+    {
+      "id": "mashhad-pharmacy-hatami",
+      "path": "images/hatami-1.jpg",
+      "sha256": "725727d06a98aea2f84ff06a05fce3244f9e053466a0575fb02508b98699527c",
+      "bytes": 68095
+    },
+    {
+      "id": "mashhad-pharmacy-22bahman-daneshgah",
+      "path": "images/22bahman-daneshgah-1.jpg",
+      "sha256": "a739d70393dc7fec544210c846343b1d321cf5539288cdc940b5d55d213049a8",
+      "bytes": 27346
+    },
+    {
+      "id": "mashhad-pharmacy-22bahman-daneshgah",
+      "path": "images/22bahman-daneshgah-2.jpg",
+      "sha256": "09f6bf88dd2a6dc932352f26acdaa82e7ccb35705c13c6557f29a5659f0b8bee",
+      "bytes": 56950
+    },
+    {
+      "id": "mashhad-pharmacy-markazi-emam",
+      "path": "images/markazi-emam-1.jpg",
+      "sha256": "0b26284f9ce9026d9551e658432c623788eb4cb1b776279bfbafea7531e2ec58",
+      "bytes": 61382
+    },
+    {
+      "id": "mashhad-pharmacy-markazi-emam",
+      "path": "images/markazi-emam-2.jpg",
+      "sha256": "93c3481724c7d8b83d391c18bdaf34a7fce39f3afbbb72e0e0ca7b455197c397",
+      "bytes": 30779
+    },
+    {
+      "id": "mashhad-pharmacy-fakour",
+      "path": "images/fakour-1.jpg",
+      "sha256": "507bd8e22430facecfdc4b06b5bb10e383fdea5910cbadf6af5177a1f77e4600",
+      "bytes": 78893
+    },
+    {
+      "id": "mashhad-pharmacy-fakour",
+      "path": "images/fakour-2.jpg",
+      "sha256": "3aec836d780d575c6810f9e0d43bda9608c1f1b14bba555e1f98044900202ffc",
+      "bytes": 107762
+    },
+    {
+      "id": "mashhad-pharmacy-mehran",
+      "path": "images/mehran-1.jpg",
+      "sha256": "1f3ab5d9618125038b1d63ceb895abfabdb46ba94516d9057dc5c563e5278abf",
+      "bytes": 130577
+    },
+    {
+      "id": "mashhad-pharmacy-mehran",
+      "path": "images/mehran-2.jpg",
+      "sha256": "56e79369d38a0958bc3ea5c51c2f637ccfb1b001af75fddbe543fec1967a3dcf",
+      "bytes": 231239
+    },
+    {
+      "id": "mashhad-pharmacy-vahidi-manesh",
+      "path": "images/vahidi-manesh-1.jpg",
+      "sha256": "8d567e2aa60e0dd411a4499e72007e5ab0835e8fd4443514934e5f9253ea8c9c",
+      "bytes": 88087
+    },
+    {
+      "id": "mashhad-pharmacy-vahidi-manesh",
+      "path": "images/vahidi-manesh-2.jpg",
+      "sha256": "f23a96aff31e5897660e26371857cebe8217dbace2bf0e8166e89177d0cb64e8",
+      "bytes": 185004
+    },
+    {
+      "id": "mashhad-pharmacy-toozandehjani",
+      "path": "images/toozandehjani-1.jpg",
+      "sha256": "f38975a83e8c501fb81f55518fdd7a2b7ebe5579624af2c8f23bb56eb8cee8d3",
+      "bytes": 18734
+    },
+    {
+      "id": "mashhad-pharmacy-toozandehjani",
+      "path": "images/toozandehjani-2.jpg",
+      "sha256": "ca9c2e2f09427faac001a086998dadae2f01ed9cf8dc5822102bbc68d7648f60",
+      "bytes": 20017
+    },
+    {
+      "id": "mashhad-pharmacy-toozandehjani",
+      "path": "images/toozandehjani-3.jpg",
+      "sha256": "9dc00311f538462860c3b463525915965726ca5d4f93f12c37a56774fc5582e7",
+      "bytes": 19103
+    },
+    {
+      "id": "mashhad-pharmacy-toozandehjani",
+      "path": "images/toozandehjani-4.jpg",
+      "sha256": "3383292c73c60fcc81247d525418fc18bb062e93c13d17ff4b37e1db22ef7abf",
+      "bytes": 18059
+    },
+    {
+      "id": "mashhad-pharmacy-toozandehjani",
+      "path": "images/toozandehjani-5.jpg",
+      "sha256": "cdf86544175899e565dd8399bd668fe1786f7f5488c57272b565df6529341530",
+      "bytes": 18656
+    },
+    {
+      "id": "mashhad-pharmacy-noori-fard",
+      "path": "images/noori-fard-1.jpg",
+      "sha256": "ce8be64139e64d2c8283c0229af752dc6742b302181c980f6b6225c4546c8d35",
+      "bytes": 78847
+    },
+    {
+      "id": "mashhad-pharmacy-noori-fard",
+      "path": "images/noori-fard-2.jpg",
+      "sha256": "46431357ffbdbffb274beacaa3653cf75a25e7c2e783747bdae3cb65171b3530",
+      "bytes": 98428
+    }
+  ]
+}
