@@ -381,12 +381,6 @@ button.home-category { cursor:pointer; }
 .directory-record-contact:disabled{border-color:var(--border);color:#85858D;cursor:not-allowed;flex-direction:column;gap:0}
 .directory-record-contact:disabled>span{line-height:12px}
 .directory-record-contact small{font-size:8px;line-height:9px;white-space:normal;text-align:center}
-.medical-record-detail .page-main{display:flex;flex-direction:column;align-items:stretch;gap:20px}
-.medical-record-facts{font-size:14px;line-height:2}
-.medical-record-facts dt{font-weight:600;margin-top:16px}
-.medical-record-facts dd{color:var(--muted-foreground);margin:0}
-.medical-record-detail a{color:var(--primary)}
-.medical-record-detail section{font-size:13px;line-height:2}
 @media(max-width:360px){.directory-record-card{padding:12px;gap:10px}}
 
 /* The existing decorative disc grows within the reserved icon footprint. */
@@ -554,3 +548,10 @@ button.home-category { cursor:pointer; }
 .need-search-page .guide-form-actions{padding:0;margin:0}
 .need-search-page .guide-form-actions>[data-slot=button]{min-height:44px;font-size:14px;font-weight:600;gap:8px}
 @media(prefers-reduced-motion:reduce){.need-filter-chevron{transition:none}}
+
+/* Shared record detail layout; uses the existing care-profile components. */
+.entity-heading{flex:1;min-width:0}.entity-rating{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.entity-actions{--primary-action-height:48px;display:block;padding-bottom:12px}
+.entity-actions>.entity-call[data-slot=button]{display:flex;width:100%;min-width:0;height:48px;min-height:48px;gap:8px;padding-inline:16px;font-size:14px}
+.entity-actions>.entity-call svg{width:18px;height:18px;flex-shrink:0}
+.entity-detail [data-slot=tabs-list]{width:100%}.entity-detail [data-slot=tabs-trigger]{flex:1}.entity-detail{overflow-wrap:anywhere}
