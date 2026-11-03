@@ -32,7 +32,9 @@ jobs:
   deploy:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
+    env:
+      PYTHONUNBUFFERED: "1"
     environment: production-hosting
     steps:
       - uses: actions/checkout@v4
