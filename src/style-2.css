@@ -555,3 +555,7 @@ button.home-category { cursor:pointer; }
 .entity-actions>.entity-call[data-slot=button]{display:flex;width:100%;min-width:0;height:48px;min-height:48px;gap:8px;padding-inline:16px;font-size:14px}
 .entity-actions>.entity-call svg{width:18px;height:18px;flex-shrink:0}
 .entity-detail [data-slot=tabs-list]{width:100%}.entity-detail [data-slot=tabs-trigger]{flex:1}.entity-detail{overflow-wrap:anywhere}
+
+/* White canvas scoped to feedback, center introduction and about routes. */
+body:has(:is(.feedback-route,.referral-route,.about-route)){background:#FFFFFF}
+.app-shell:has(:is(.feedback-route,.referral-route,.about-route)){--background:#FFFFFF;--card:#FFFFFF}

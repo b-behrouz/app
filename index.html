@@ -278,7 +278,7 @@ function kw(){
  busy.current=true;setSending(true);trace.loading();try{const key=JSON.stringify(payload);if(!ticket.current||ticket.current.key!==key)ticket.current={key,payload:{...payload,id:Ew(),createdAt:new Date().toISOString()}};setUncertain(false);setReviewed(false);HamghadamFeedbackTicket=ticket.current;trace.set('payloadPreparationTime',performance.now()-payloadStarted);await Dw(ticket.current.payload,trace);trace.finish('success');HamghadamFeedbackDraft=HamghadamFeedbackEmpty();if(alive.current){setV(HamghadamFeedbackEmpty());ticket.current=null;HamghadamFeedbackTicket=null;setDone(true);}}catch(err){trace.finish('error');if(alive.current){setUncertain(err.uncertain===true);setReviewed(false);setError(err instanceof Tw?err.message:'ثبت بازخورد انجام نشد. اتصال اینترنت رو بررسی کن و دوباره تلاش کن. پاسخ‌هات حفظ شدن.');}}finally{busy.current=false;if(alive.current)setSending(false);}};
  return e('section',{className:'feedback-page feedback-redesign','aria-label':'فرم بازخورد'},
  e('form',{ref:form,className:'feedback-form',onSubmit:submit,noValidate:true,'data-matomo-ignore':true},
- e('div',{className:'feedback-intro-compact'},e('h1',{className:'feedback-intro-title'},'نظرت کمک می‌کنه هم‌قدم بهتر بشه 💙'),e('p',{className:'guide-intro'},'دوست داریم بدونیم تونستی چیزی که دنبالش بودی رو پیدا کنی یا نه. جواب‌هات کمک می‌کنه هم‌قدم رو کاربردی‌تر کنیم.')),
+ e('div',{className:'feedback-intro-compact'},e('h1',{className:'feedback-intro-title'},'نظرت کمک می‌کنه هم‌قدم بهتر بشه 🩷'),e('p',{className:'guide-intro'},'دوست داریم بدونیم تونستی چیزی که دنبالش بودی رو پیدا کنی یا نه. جواب‌هات کمک می‌کنه هم‌قدم رو کاربردی‌تر کنیم.')),
  e('fieldset',{className:'guide-group feedback-question'},e('legend',null,'هم‌قدم چقدر به کارت اومد؟'),e('div',{className:'feedback-rating-options',role:'radiogroup','aria-label':'هم‌قدم چقدر به کارت اومد؟'},['اصلاً','کم','متوسط','خوب','خیلی خوب'].map((label,i)=>e('label',{className:'guide-choice',key:i},e('input',{type:'radio',name:'feedback-rating',value:String(i+1),checked:v.rating===String(i+1),disabled:sending,onChange:()=>change('rating',String(i+1))}),e('span',{'aria-hidden':true,className:'feedback-emoji'},['😞','🙁','😐','🙂','😍'][i]),e('span',null,label))))),
  group('intent','امروز دنبال چی بودی؟'),group('outcome','تونستی چیزی که می‌خواستی پیدا کنی؟'),
  (v.outcome==='partial'||v.outcome==='no')&&e('div',{className:'feedback-barriers'},group('reasons','چی باعث شد به نتیجه دلخواهت نرسی؟','می‌تونی چند مورد رو انتخاب کنی.'),v.reasons.includes('other')&&e('label',{className:'guide-note-label'},'توضیح کوتاه (اختیاری)',e(ow,{value:v.other,disabled:sending,maxLength:300,onChange:event=>change('other',event.target.value)}))),
@@ -1643,6 +1643,10 @@ button.home-category { cursor:pointer; }
 .entity-actions>.entity-call[data-slot=button]{display:flex;width:100%;min-width:0;height:48px;min-height:48px;gap:8px;padding-inline:16px;font-size:14px}
 .entity-actions>.entity-call svg{width:18px;height:18px;flex-shrink:0}
 .entity-detail [data-slot=tabs-list]{width:100%}.entity-detail [data-slot=tabs-trigger]{flex:1}.entity-detail{overflow-wrap:anywhere}
+
+/* White canvas scoped to feedback, center introduction and about routes. */
+body:has(:is(.feedback-route,.referral-route,.about-route)){background:#FFFFFF}
+.app-shell:has(:is(.feedback-route,.referral-route,.about-route)){--background:#FFFFFF;--card:#FFFFFF}
 </style>
 <link rel="canonical" href="https://hamghadamcare.ir/"/><meta property="og:url" content="https://hamghadamcare.ir/"/><meta property="og:image" content="https://hamghadamcare.ir/og-image.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="هم‌قدم — پلتفرم جست‌وجو و انتخاب خدمات مراقبتی در منزل"/><meta name="twitter:url" content="https://hamghadamcare.ir/"/><meta name="twitter:image" content="https://hamghadamcare.ir/og-image.png"/><meta name="twitter:image:alt" content="هم‌قدم — پلتفرم جست‌وجو و انتخاب خدمات مراقبتی در منزل"/><style id="hero-palette-refinement">
 /* Palette only; existing content, geometry and interactions stay intact. */
@@ -1685,7 +1689,7 @@ button.home-category { cursor:pointer; }
 .advanced-provider-cards svg{width:23px;height:23px;flex-shrink:0}
 .advanced-provider-cards>label:has(input:focus-visible){outline:2px solid color-mix(in srgb,var(--primary) 60%,white);outline-offset:3px}
 </style><style>.advanced-cards>label,.advanced-cards>label:last-child{height:48px;min-height:48px;padding:9px 11px}</style><style>
-:root{--primary-action-height:52px;--primary-action-font-size:14px;--primary-action-font-weight:600}
+:root{--primary-action-height:48px;--primary-action-font-size:14px;--primary-action-font-weight:600}
 .app-shell [data-slot=button][data-primary-action=true]{height:var(--primary-action-height)!important;min-height:var(--primary-action-height)!important;background:var(--primary)!important;color:var(--primary-foreground)!important;border-color:var(--primary)!important;font-size:var(--primary-action-font-size)!important;font-weight:var(--primary-action-font-weight);box-shadow:none}
 @media(hover:hover){.app-shell [data-slot=button][data-primary-action=true]:not(:disabled):not([aria-disabled=true]):hover{background:color-mix(in srgb,var(--primary) 92%,white)!important}}
 .app-shell [data-slot=button][data-primary-action=true]:not(:disabled):not([aria-disabled=true]):active{background:color-mix(in srgb,var(--primary) 88%,black)!important}
@@ -1704,4 +1708,12 @@ button.home-category { cursor:pointer; }
 .app-shell{--bottom-nav-safe-area:env(safe-area-inset-bottom,0px);--bottom-nav-height:calc(80px + var(--bottom-nav-safe-area))}
 .hamghadam-bottom-nav{box-sizing:border-box;height:var(--bottom-nav-height);min-height:var(--bottom-nav-height);align-items:stretch;padding:8px 0 calc(12px + var(--bottom-nav-safe-area))}
 .hamghadam-bottom-nav>a{box-sizing:border-box;min-height:0;height:100%;justify-content:center;padding:0 2px;gap:6px}
+
+/* Advanced filter: clear backdrop and bordered time choices only. */
+[data-slot=drawer-overlay]:has(+ [data-slot=drawer-viewport] .advanced-sheet){backdrop-filter:none;-webkit-backdrop-filter:none}
+.advanced-sheet{background:#FFFFFF}
+.advanced-sheet .advanced-radios label{border:1px solid var(--border);background:var(--card);box-shadow:none;transition:background-color .15s,border-color .15s,color .15s}
+.advanced-sheet .advanced-radios label:has(input:checked){border-color:var(--primary);background:color-mix(in srgb,var(--primary) 7%,white);color:var(--primary)}
+@media(hover:hover){.advanced-sheet .advanced-radios label:hover{background:color-mix(in srgb,var(--primary) 4%,white)}}
+.advanced-sheet .advanced-radios label:has(input:focus-visible){outline:2px solid var(--ring);outline-offset:3px;box-shadow:none}
 </style></head><body><div id="root"></div></body></html>

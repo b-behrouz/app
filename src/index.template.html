@@ -33,7 +33,7 @@
 .advanced-provider-cards svg{width:23px;height:23px;flex-shrink:0}
 .advanced-provider-cards>label:has(input:focus-visible){outline:2px solid color-mix(in srgb,var(--primary) 60%,white);outline-offset:3px}
 </style><style>.advanced-cards>label,.advanced-cards>label:last-child{height:48px;min-height:48px;padding:9px 11px}</style><style>
-:root{--primary-action-height:52px;--primary-action-font-size:14px;--primary-action-font-weight:600}
+:root{--primary-action-height:48px;--primary-action-font-size:14px;--primary-action-font-weight:600}
 .app-shell [data-slot=button][data-primary-action=true]{height:var(--primary-action-height)!important;min-height:var(--primary-action-height)!important;background:var(--primary)!important;color:var(--primary-foreground)!important;border-color:var(--primary)!important;font-size:var(--primary-action-font-size)!important;font-weight:var(--primary-action-font-weight);box-shadow:none}
 @media(hover:hover){.app-shell [data-slot=button][data-primary-action=true]:not(:disabled):not([aria-disabled=true]):hover{background:color-mix(in srgb,var(--primary) 92%,white)!important}}
 .app-shell [data-slot=button][data-primary-action=true]:not(:disabled):not([aria-disabled=true]):active{background:color-mix(in srgb,var(--primary) 88%,black)!important}
@@ -52,4 +52,12 @@
 .app-shell{--bottom-nav-safe-area:env(safe-area-inset-bottom,0px);--bottom-nav-height:calc(80px + var(--bottom-nav-safe-area))}
 .hamghadam-bottom-nav{box-sizing:border-box;height:var(--bottom-nav-height);min-height:var(--bottom-nav-height);align-items:stretch;padding:8px 0 calc(12px + var(--bottom-nav-safe-area))}
 .hamghadam-bottom-nav>a{box-sizing:border-box;min-height:0;height:100%;justify-content:center;padding:0 2px;gap:6px}
+
+/* Advanced filter: clear backdrop and bordered time choices only. */
+[data-slot=drawer-overlay]:has(+ [data-slot=drawer-viewport] .advanced-sheet){backdrop-filter:none;-webkit-backdrop-filter:none}
+.advanced-sheet{background:#FFFFFF}
+.advanced-sheet .advanced-radios label{border:1px solid var(--border);background:var(--card);box-shadow:none;transition:background-color .15s,border-color .15s,color .15s}
+.advanced-sheet .advanced-radios label:has(input:checked){border-color:var(--primary);background:color-mix(in srgb,var(--primary) 7%,white);color:var(--primary)}
+@media(hover:hover){.advanced-sheet .advanced-radios label:hover{background:color-mix(in srgb,var(--primary) 4%,white)}}
+.advanced-sheet .advanced-radios label:has(input:focus-visible){outline:2px solid var(--ring);outline-offset:3px;box-shadow:none}
 </style></head><body><div id="root"></div></body></html>
