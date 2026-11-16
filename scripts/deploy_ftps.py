@@ -6,6 +6,21 @@ META='.hamghadam-deploy.json'
 LIMIT=16*1024*1024
 
 def digest(data):return hashlib.sha256(data).hexdigest()
+def public_permissions(ftp, files):
+    """Apply the approved release modes, including byte-identical old files.
+
+    Only exact managed public files and their named parent directories are
+    touched. Never recurse through the host or alter its root/configuration.
+    """
+    if not files or not all(safe_path(name) for name in files):
+        raise ValueError('Unexpected permission target')
+    parents={parent.as_posix() for name in files for parent in PurePosixPath(name).parents
+             if parent.as_posix()!='.'}
+    for name in sorted(parents,key=lambda value:(value.count('/'),value)):
+        ftp.sendcmd('SITE CHMOD 755 '+name)
+    for name in sorted(files):
+        ftp.sendcmd('SITE CHMOD 644 '+name)
+    print('Public release permissions applied: files 0644, named directories 0755; host root/configuration untouched.')
 def safe_path(name):
     return name in {'index.html','404.html','robots.txt','sitemap.xml','og-image.png','seo/noindex.html',META} or bool(re.fullmatch(r'(?:about|need|feedback|introduce-center|family-need|categories/(?:hospitals|pharmacies|nurses)|centers/[a-z0-9-]+)/index\.html',name)) or bool(re.fullmatch(r'assets/site/image-[a-f0-9]{24}\.(?:jpg|png|webp|gif)',name)) or bool(re.fullmatch(r'assets/runtime/(?:app-[a-f0-9]{24}\.js|styles-[a-f0-9]{24}\.css)',name))
 def bounded_read(ftp,name,limit=LIMIT):
@@ -93,6 +108,7 @@ def deploy(ftp,files,meta,initial_hash='',check=False,adoption=None):
         print('Replacing verified managed files.')
         for name in order:
             ftp.rename(staged[name],name);changed.append(name)
+        public_permissions(ftp,files)
         print('Upload committed; checking public URL is still required.')
     except Exception:
         # Restore only files changed by this invocation. Never recursive delete.

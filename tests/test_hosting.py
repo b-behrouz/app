@@ -4,9 +4,10 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
 from build_hosting import build
 from site_assets import externalize
-from deploy_ftps import deploy,digest,META,safe_path
+from deploy_ftps import deploy,digest,META,safe_path,public_permissions
 class FTP:
- def __init__(self,files=None):self.files=dict(files or {});self.fail=None;self.directories={'.'};self.deleted=[];self.calls=0
+ def __init__(self,files=None):self.files=dict(files or {});self.fail=None;self.directories={'.'};self.deleted=[];self.calls=0;self.permission_commands=[]
+ def sendcmd(self,command):self.permission_commands.append(command);return '200 Permissions changed'
  def retrbinary(self,cmd,receive):
   name=cmd[5:]
   if name not in self.files:raise ftplib.error_perm('550 missing')
@@ -37,7 +38,7 @@ class HostingTests(unittest.TestCase):
   for bad in ['.htaccess','mail/index.html','../index.html','node_modules/a','src/app.js']:self.assertFalse(safe_path(bad))
  def test_check_is_read_only(self):
   ftp=FTP({'index.html':b'other','mail/private':b'untouched'})
-  before=ftp.files.copy();deploy(ftp,self.files,self.meta,check=True);self.assertEqual(ftp.files,before)
+  before=ftp.files.copy();deploy(ftp,self.files,self.meta,check=True);self.assertEqual(ftp.files,before);self.assertEqual(ftp.permission_commands,[])
  def test_collisions_block_all_writes_and_adoption_preserves_unrelated(self):
   ftp=FTP({'index.html':b'previous','mail/private':b'email','.htaccess':b'config'})
   before=ftp.files.copy()
