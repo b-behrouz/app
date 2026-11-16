@@ -7,7 +7,7 @@ LIMIT=16*1024*1024
 
 def digest(data):return hashlib.sha256(data).hexdigest()
 def safe_path(name):
-    return name in {'index.html','404.html',META} or bool(re.fullmatch(r'(?:need|feedback|introduce-center|centers/[a-z0-9-]+)/index\.html',name))
+    return name in {'index.html','404.html','robots.txt','sitemap.xml','og-image.png','seo/noindex.html',META} or bool(re.fullmatch(r'(?:about|need|feedback|introduce-center|family-need|categories/(?:hospitals|pharmacies|nurses)|centers/[a-z0-9-]+)/index\.html',name)) or bool(re.fullmatch(r'assets/site/image-[a-f0-9]{24}\.(?:jpg|png|webp|gif)',name)) or bool(re.fullmatch(r'assets/runtime/(?:app-[a-f0-9]{24}\.js|styles-[a-f0-9]{24}\.css)',name))
 def bounded_read(ftp,name,limit=LIMIT):
     chunks=[];size=0
     def receive(data):
@@ -31,6 +31,7 @@ def validate_bundle(directory):
     files={p.relative_to(directory).as_posix():p.read_bytes() for p in directory.rglob('*') if p.is_file()}
     if not files or not all(safe_path(n) for n in files):raise ValueError('Unexpected production file')
     meta=json.loads(files[META]);expected=meta['files']
+    if b'data-routing="browser"' in files['index.html'] and not meta.get('prerendered'):raise ValueError('Unprerendered seed cannot be deployed')
     if set(files)!=(set(expected)|{META}) or any(digest(files[n])!=h for n,h in expected.items()):raise ValueError('Bundle digest mismatch')
     if sum(map(len,files.values()))>15*1024*1024:raise ValueError('Bundle budget exceeded')
     return files,meta
@@ -112,7 +113,7 @@ def deploy(ftp,files,meta,initial_hash='',check=False,adoption=None):
 
 def public_check(expected):
     url=os.environ['HOSTING_PUBLIC_URL'].rstrip('/')+'/'
-    if url!='https://hamghadamcare.ir/':raise ValueError('Unexpected public URL or HTTPS is not configured')
+    if url!='https://rahnamasalamat.ir/':raise ValueError('Unexpected public URL or HTTPS is not configured')
     req=urllib.request.Request(url+'?hamghadam_verify='+uuid.uuid4().hex,headers={'Cache-Control':'no-cache'})
     with urllib.request.urlopen(req,timeout=45) as response:
         if response.url.split('?')[0]!=url:raise ValueError('Unexpected public redirect')

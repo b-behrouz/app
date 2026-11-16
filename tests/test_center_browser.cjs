@@ -6,12 +6,12 @@ const source=fs.readFileSync('hamghadam-preview.html','utf8');
 (async()=>{
  const browser=await chromium.launch({...(process.env.CHROMIUM_PATH ? {executablePath:process.env.CHROMIUM_PATH} : {}),args:['--no-sandbox']});
  async function harness(configured=true,width=390){
-  const server=createServer();server.props.ALLOWED_ORIGINS='https://hamghadam.test';server.context.setupCenterRequests();
+  const server=createServer();server.props.ALLOWED_ORIGINS='https://rahnamasalamat.ir';server.context.setupCenterRequests();
   const context=await browser.newContext({viewport:{width,height:844}});
   let mode='normal',posts=0,acks=new Map();const errors=[];
   await context.route('**/*',async route=>{
    const url=route.request().url();
-   if(url.startsWith('https://hamghadam.test'))return route.fulfill({contentType:'text/html',body:source.replace(/const HAMGHADAM_CENTER_ENDPOINT = '[^']*';/,`const HAMGHADAM_CENTER_ENDPOINT = '${configured ? endpoint : ''}';`)});
+   if(url.startsWith('https://rahnamasalamat.ir'))return route.fulfill({contentType:'text/html',body:source.replace(/const HAMGHADAM_CENTER_ENDPOINT = '[^']*';/,`const HAMGHADAM_CENTER_ENDPOINT = '${configured ? endpoint : ''}';`)});
    if(url===endpoint){
     posts++;const payload=JSON.parse(new URLSearchParams(route.request().postData()).get('payload'));
     const response=mode==='error'?{html:`<script>top.postMessage(${JSON.stringify({channel:'hamghadam-center-v1',nonce:payload.nonce,requestId:payload.requestId,ok:false,persisted:false,code:'SERVER_ERROR'})},'*')</script>`}:server.post(payload);
@@ -28,7 +28,7 @@ const source=fs.readFileSync('hamghadam-preview.html','utf8');
    return route.abort();
   });
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('https://hamghadam.test/#/introduce-center');await page.locator('#center-referral-name').waitFor();
+  await page.goto('https://rahnamasalamat.ir/#/introduce-center');await page.locator('#center-referral-name').waitFor();
   const fill=async()=>{for(const [name,value] of Object.entries({name:'مرکز آزمایشی',phone:'۰۵۱۳۸۴۵۶۷۸۹',area:'مشهد',services:'پانسمان آزمایشی'}))await page.locator('[name="'+name+'"]').fill(value)};
   return {page,context,server,fill,errors,setMode:m=>mode=m,posts:()=>posts,rows:()=>server.tabs.get('معرفی مراکز هم‌قدم').rows};
  }

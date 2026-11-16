@@ -3,7 +3,10 @@ const {chromium}=require('playwright');
 const fs=require('fs'),crypto=require('crypto'),assert=require('assert/strict');
 const base=process.env.HAMGHADAM_LIVE_URL||'https://b-behrouz.github.io/app/';
 const digest=data=>crypto.createHash('sha256').update(data).digest('hex');
-const expected=digest(fs.readFileSync(process.env.HAMGHADAM_LIVE_INDEX||'index.html'));
+const expectedHtml=fs.readFileSync(process.env.HAMGHADAM_LIVE_INDEX||'index.html');
+const expected=digest(expectedHtml);
+const browserRouting=expectedHtml.includes(Buffer.from('data-routing="browser"'));
+const routeUrl=route=>base+(browserRouting?route+'/':'#/'+route);
 const remoteTimeout=Number(process.env.HAMGHADAM_LIVE_TIMEOUT_MS||60000);
 assert(Number.isFinite(remoteTimeout)&&remoteTimeout>=20000&&remoteTimeout<=300000);
 const navigationTimeout=Math.max(120000,remoteTimeout);
@@ -39,15 +42,25 @@ const navigationTimeout=Math.max(120000,remoteTimeout);
    await page.getByRole('button',{name:'فیلتر پیشرفته',exact:true}).click();
    await page.getByRole('dialog').waitFor();await page.keyboard.press('Escape');
    await page.goto(base+'centers/ibn-sina-mashhad/',{waitUntil:'domcontentloaded'});
-   await page.waitForURL(base+'#/centers/ibn-sina-mashhad',{waitUntil:'domcontentloaded'});await page.locator('.app-shell.profile-route').waitFor();
+   await page.waitForURL(routeUrl('centers/ibn-sina-mashhad'),{waitUntil:'domcontentloaded'});await page.locator('.app-shell.profile-route').waitFor();
    await page.reload({waitUntil:'domcontentloaded'});await page.locator('.app-shell.profile-route').waitFor();
    await page.getByRole('button',{name:/نمایش کامل تصویر ثبت‌شده/}).first().click();
    await page.getByRole('region',{name:'گالری بزرگ تصاویر مرکز'}).waitFor();await page.keyboard.press('Escape');
-   await page.goto(base+'introduce-center/',{waitUntil:'domcontentloaded'});await page.waitForURL(base+'#/introduce-center',{waitUntil:'domcontentloaded'});
+   await page.goto(base+'introduce-center/',{waitUntil:'domcontentloaded'});await page.waitForURL(routeUrl('introduce-center'),{waitUntil:'domcontentloaded'});
    await page.locator('#center-referral-name').waitFor();
    await page.locator('.center-referral-form button[type=submit]').click();
    await page.getByText('نام مرکز خدمات پرستاری را وارد کنید.',{exact:true}).waitFor();
-   await page.goto(base+'feedback/',{waitUntil:'domcontentloaded'});await page.waitForURL(base+'#/feedback',{waitUntil:'domcontentloaded'});await page.locator('.feedback-form').waitFor();
+   await page.goto(base+'feedback/',{waitUntil:'domcontentloaded'});await page.waitForURL(routeUrl('feedback'),{waitUntil:'domcontentloaded'});await page.locator('.feedback-form').waitFor();
+   if(browserRouting){
+    for(const category of ['hospitals','pharmacies']){
+     const url=base+'categories/'+category+'/';
+     const direct=await page.goto(url,{waitUntil:'domcontentloaded'});assert.equal(direct.status(),200);
+     await page.locator('[data-home-ready=true]').waitFor();
+     const reloaded=await page.reload({waitUntil:'domcontentloaded'});assert.equal(reloaded.status(),200);
+     await page.locator('[data-home-ready=true]').waitFor();assert.equal(page.url(),url);
+     assert(Number(await page.locator('#center-search-results').getAttribute('data-result-count'))>0);
+    }
+   }
    await page.goto(base,{waitUntil:'domcontentloaded'});await page.locator('[data-home-ready=true]').waitFor();assert.equal(await page.locator('.hamghadam-bottom-nav a').count(),4);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.deepEqual(errors,[]);
    await page.evaluate(()=>document.fonts.ready);fs.mkdirSync('work/live-qa',{recursive:true});

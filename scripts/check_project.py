@@ -56,7 +56,7 @@ def main():
   names=git('diff','--cached','--name-only','--diff-filter=ACM','-z').split(b'\0')
   scan((n.decode(),git('show',':'+n.decode())) for n in names if n)
   # Build the staged source, not an unrelated version in the worktree.
-  source_names=['src/index.template.html','src/app.js','src/style-1.css','src/style-2.css','src/style-3.css','hamghadam-preview.html']
+  source_names=['src/index.template.html','src/boot-guard.js','src/app.js','src/style-1.css','src/style-2.css','src/style-3.css','hamghadam-preview.html']
   sources={n:git('show',':'+n).decode('utf-8') for n in source_names}
   assembled=re.sub(r'<!-- INLINE:([a-z0-9.-]+) -->',lambda m:sources['src/'+m[1]],sources['src/index.template.html'])
   if assembled!=sources['hamghadam-preview.html']:raise SystemExit('Staged HTML does not match staged sources')

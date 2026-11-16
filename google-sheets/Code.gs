@@ -31,7 +31,7 @@ function setupCenterRequests() {
 function ensureCenterProductionOrigins_(properties) {
   const existing = (properties.getProperty('ALLOWED_ORIGINS') || 'https://b-behrouz.github.io')
     .split(',').map(value => value.trim()).filter(Boolean);
-  const merged = Array.from(new Set(existing.concat(['https://hamghadamcare.ir', 'https://www.hamghadamcare.ir'])));
+  const merged = Array.from(new Set(existing.concat(['https://rahnamasalamat.ir', 'https://www.rahnamasalamat.ir', 'https://hamghadamcare.ir', 'https://www.hamghadamcare.ir'])));
   properties.setProperty('ALLOWED_ORIGINS', merged.join(','));
   return merged;
 }

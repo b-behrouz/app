@@ -14,7 +14,7 @@ on:
         description: Full SHA independently approved by the owner for this host operation
         type: string
       confirmation:
-        description: DEPLOY hamghadamcare.ir SHA or ROLLBACK hamghadamcare.ir SHA; only after explicit owner approval
+        description: DEPLOY rahnamasalamat.ir SHA or ROLLBACK rahnamasalamat.ir SHA; only after explicit owner approval
         type: string
       backup_run_id:
         description: Verified public entrypoint backup run ID (initial migration only)
@@ -104,7 +104,7 @@ jobs:
           HOSTING_FTPS_PASSWORD: ${{ secrets.HOSTING_FTPS_PASSWORD }}
           HOSTING_REMOTE_DIR: ${{ secrets.HOSTING_REMOTE_DIR }}
           HOSTING_INITIAL_INDEX_SHA256: ${{ secrets.HOSTING_INITIAL_INDEX_SHA256 }}
-          HOSTING_PUBLIC_URL: https://hamghadamcare.ir/
+          HOSTING_PUBLIC_URL: https://rahnamasalamat.ir/
         run: |
           if [ "$OPERATION" = check ]; then
             python3 scripts/deploy_ftps.py --directory work/hosting --check
@@ -116,7 +116,7 @@ jobs:
       - name: Verify actual production URL on mobile and desktop
         if: steps.gate.outputs.ready == 'true' && steps.gate.outputs.operation != 'check'
         env:
-          HAMGHADAM_LIVE_URL: https://hamghadamcare.ir/
+          HAMGHADAM_LIVE_URL: https://rahnamasalamat.ir/
           HAMGHADAM_LIVE_INDEX: work/hosting/index.html
         run: node tests/test_live_pages.cjs
       - name: Keep approved release for rollback reference

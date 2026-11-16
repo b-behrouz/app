@@ -14,7 +14,7 @@ const path=require('path'),fs=require('fs'),assert=require('assert/strict');
    }
    assert(page.url().startsWith('file://'));
    await page.locator('[data-home-ready=true]').waitFor();await page.evaluate(()=>document.fonts.ready);
-   assert.equal(await page.locator('.home-brand-description').innerText(),'راهنمای انتخاب خدمات مراقبتی');
+   assert.equal(await page.locator('.home-brand-description').innerText(),'راهنمای انتخاب خدمات سلامت');
    const search=page.locator('input[type=search]');await search.fill('zzzznonexistent');
    await page.waitForFunction(()=>document.querySelector('#center-search-results')?.getAttribute('data-result-count')==='0');
    await search.fill('');await page.waitForFunction(()=>Number(document.querySelector('#center-search-results')?.getAttribute('data-result-count'))>0);

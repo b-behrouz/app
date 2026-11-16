@@ -3,6 +3,7 @@ from contextlib import redirect_stderr
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
 from build_hosting import build
+from site_assets import externalize
 from deploy_ftps import deploy,digest,META,safe_path
 class FTP:
  def __init__(self,files=None):self.files=dict(files or {});self.fail=None;self.directories={'.'};self.deleted=[];self.calls=0
@@ -28,11 +29,11 @@ class HostingTests(unittest.TestCase):
  def setUp(self):
   self.files=build();self.meta=json.loads(self.files[META])
  def test_output_only_static_and_root_routes(self):
-  self.assertEqual(len(self.files),16);self.assertLess(self.meta['bytes'],15*1024*1024)
-  self.assertEqual(self.files['index.html'],(ROOT/'hamghadam-preview.html').read_bytes())
+  self.assertGreater(len(self.files),70);self.assertLess(self.meta['bytes'],15*1024*1024)
+  self.assertIn(b'data-routing="browser"',self.files['index.html']);self.assertNotIn(b'data:image/',self.files['index.html'])
   self.assertNotIn(b'/app/#',self.files['feedback/index.html'])
-  self.assertIn(b'/#/feedback',self.files['feedback/index.html'])
-  self.assertEqual(len([n for n in self.files if n.startswith('centers/')]),10)
+  self.assertNotIn(b'location.replace',self.files['feedback/index.html']);self.assertIn(b'noindex,follow',self.files['feedback/index.html'])
+  self.assertEqual(len([n for n in self.files if n.startswith('centers/')]),62)
   for bad in ['.htaccess','mail/index.html','../index.html','node_modules/a','src/app.js']:self.assertFalse(safe_path(bad))
  def test_check_is_read_only(self):
   ftp=FTP({'index.html':b'other','mail/private':b'untouched'})

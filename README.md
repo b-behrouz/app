@@ -1,6 +1,6 @@
 > مرجع جاری و الزام‌آور: [PROJECT_WORKFLOW.md](PROJECT_WORKFLOW.md). تأیید HTML، تأیید push و تأیید انتشار هاست سه تأیید مستقل‌اند؛ انتشار خودکار هاست پس از push لغو شده است.
 
-# هم‌قدم — نسخهٔ مستقل محلی
+# راهنمای سلامت — نسخهٔ مستقل محلی
 
 `hamghadam-preview.html` خروجی مستقل و نهایی پروژه است. فونت‌ها، استایل، JavaScript، تصاویر و داده‌های لازم در خود فایل قرار دارند. استفادهٔ نهایی باید با دانلود فایل و دابل‌کلیک، بدون نصب یا وب‌سرور باشد. وابستگی‌های زیر فقط برای توسعه و آزمون هستند.
 
@@ -66,3 +66,17 @@ hook محلی اطلاعات محرمانه و سازگاری HTML با سورس
 علت نمایش مستندات و اصلاح آماده‌شده در [docs/PAGES.md](docs/PAGES.md) ثبت شده است. منبع انتشار موجود `main` و `/(root)` باقی می‌ماند. `index.html` واقعی سایت و `.nojekyll` در همان ریشه ساخته می‌شوند؛ فایل README حذف نمی‌شود. دستور `npm run build` هم HTML محلی و هم ورودی‌های Pages را تولید می‌کند. فایل `config/pages.json` پیشوند `/app/` را مشخص می‌کند.
 
 اصلاحات Pages تا پیش از بررسی HTML و تأیید صریح کاربر push یا منتشر نمی‌شوند. پس از انتشار، خود لینک زنده باید علاوه بر نتیجهٔ workflow بررسی شود.
+
+## ساخت نسخه انتشار با پیش‌رندر
+
+پس از تغییر سورس و ساخت preview/Pages، داده پیش‌رندر نیز باید با مرورگر واقعی تازه شود:
+
+```bash
+python3 scripts/build_preview.py
+python3 scripts/build_pages.py
+python3 scripts/build_hosting.py --skip-prerender --output work/prerender-seed-UNIQUE
+CHROMIUM_PATH=/usr/bin/chromium node scripts/prerender.cjs work/prerender-seed-UNIQUE
+python3 scripts/build_hosting.py --output work/release-UNIQUE
+```
+
+خروجی seed فقط برای ثبت HTML اولیه است و کنترل انتشار آن را رد می‌کند. `data/prerender/pages.json` به هش preview متصل است؛ خروجی stale ساخته نمی‌شود. هیچ‌یک از این فرمان‌ها مجوز push یا انتشار نیست. پیش‌نمایش تک‌فایلی همچنان از hash و دارایی inline استفاده می‌کند؛ بسته انتشار باید با وب‌سرور HTTP بررسی شود.

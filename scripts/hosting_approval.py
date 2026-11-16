@@ -8,7 +8,7 @@ def authorize(event,ref,operation,revision,approved_revision,confirmation,enable
     if operation not in {'deploy','rollback'}:raise ValueError('Unknown operation')
     if enabled!='true':raise ValueError('HOSTING_ENABLED must be true; it is not an approval')
     if not re.fullmatch(r'[0-9a-f]{40}',revision) or revision!=approved_revision:raise ValueError('Exact separately approved full SHA required')
-    expected=operation.upper()+' hamghadamcare.ir '+revision
+    expected=operation.upper()+' rahnamasalamat.ir '+revision
     if confirmation!=expected:raise ValueError('Explicit domain, operation and SHA confirmation required')
     if not is_ancestor(revision):raise ValueError('Revision must exist in main history')
     return revision

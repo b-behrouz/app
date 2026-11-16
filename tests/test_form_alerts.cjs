@@ -1,5 +1,6 @@
 const {chromium}=require('playwright'),fs=require('fs'),assert=require('assert/strict');
 const {createServer}=require('./test_center_server.cjs');
+const path=require('path'),release=process.env.FORM_RELEASE_DIR?path.resolve(process.env.FORM_RELEASE_DIR):null;
 const html=fs.readFileSync('hamghadam-preview.html','utf8');
 const config=html.match(/var ww=\{spreadsheetId:`([^`]+)`,endpoint:`([^`]+)`/);
 const endpoint=html.match(/const HAMGHADAM_CENTER_ENDPOINT = '([^']+)';/)[1];
@@ -12,7 +13,11 @@ const endpoint=html.match(/const HAMGHADAM_CENTER_ENDPOINT = '([^']+)';/)[1];
    let errorMode=true,posts=0;
    await context.route('**/*',async route=>{
     const request=route.request(),url=request.url();
-    if(url.startsWith('https://alerts.test/'))return route.fulfill({contentType:'text/html',body:html});
+    if(url.startsWith('https://alerts.test/')){
+     if(!release)return route.fulfill({contentType:'text/html',body:html});
+     let name=new URL(url).pathname.slice(1);if(!name||name.endsWith('/'))name+='index.html';const file=path.resolve(release,name);assert(file.startsWith(release+'/'));
+     return route.fulfill({contentType:({'.js':'application/javascript','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp'}[path.extname(file)]||'text/html'),body:fs.readFileSync(file)});
+    }
     if(request.method()==='POST'&&url===config[2]){
      posts++;const payload=JSON.parse(new URLSearchParams(request.postData()).get('payload'));
      await new Promise(resolve=>setTimeout(resolve,500));
@@ -42,15 +47,15 @@ const endpoint=html.match(/const HAMGHADAM_CENTER_ENDPOINT = '([^']+)';/)[1];
    for(const [name,value] of Object.entries({name:'مرکز آزمایشی',phone:'۰۵۱۳۸۴۵۶۷۸۹',area:'مشهد',services:'پانسمان آزمایشی'}))await page.locator('[name='+name+']').fill(value);
    await page.locator('.center-referral-form button[type=submit]').click();await inspect('error','center-error');await page.getByText(/INVALID_ORIGIN/).waitFor();
    assert.equal(await page.locator('[name=name]').inputValue(),'مرکز آزمایشی');assert.equal(server.tabs.get('معرفی مراکز هم‌قدم').rows.length,1);
-   errorMode=false;await page.locator('.center-referral-form button[type=submit]').click();
+   const centerBefore=posts;errorMode=false;await page.locator('.center-referral-form button[type=submit]').click();assert.equal(await page.locator('.center-referral-form button[type=submit]').isDisabled(),true);await page.locator('.center-referral-form').evaluate(f=>{f.requestSubmit();f.requestSubmit()});
    assert.equal(await page.locator('.hamghadam-form-alert[data-status=success]').count(),0);
-   await page.getByText('اطلاعات مرکز با موفقیت ثبت شد و در انتظار بررسی است.',{exact:true}).waitFor();assert.equal(server.tabs.get('معرفی مراکز هم‌قدم').rows.length,2);assert.equal(await page.locator('[name=name]').inputValue(),'');
+   await page.getByText('اطلاعات مرکز با موفقیت ثبت شد و در انتظار بررسی است.',{exact:true}).waitFor();assert.equal(posts,centerBefore+1);assert.equal(await page.locator('.center-success-toast').isVisible(),true);assert.equal(server.tabs.get('معرفی مراکز هم‌قدم').rows.length,2);assert.equal(await page.locator('[name=name]').inputValue(),'');
    await page.goto('https://alerts.test/#/feedback');assert.equal(await page.locator('.hamghadam-form-alert[data-status=info]').count(),0);
-   const before=posts;await page.locator('.feedback-form button[type=submit]').click();assert.equal(posts,before);await page.getByText('لطفاً بگو هم‌قدم چقدر به کارت اومد.',{exact:true}).waitFor();
+   const before=posts;await page.locator('.feedback-form button[type=submit]').click();assert.equal(posts,before);await page.getByText('لطفاً بگو راهنمای سلامت چقدر به کارت اومد.',{exact:true}).waitFor();
    await page.locator('.feedback-rating-options label').nth(3).click();await page.locator('#feedback-notes').fill('بازخورد آزمایشی');errorMode=true;
    await page.locator('.feedback-form button[type=submit]').click();await inspect('error','feedback-error');assert.equal(await page.locator('#feedback-notes').inputValue(),'بازخورد آزمایشی');
-   errorMode=false;await page.locator('.feedback-form button[type=submit]').click();assert.equal(await page.locator('.hamghadam-form-alert[data-status=success]').count(),0);
-   await page.getByRole('dialog').waitFor();await page.getByText('ممنون که کمکمون کردی 🩷',{exact:true}).waitFor();
+   const feedbackBefore=posts;errorMode=false;await page.locator('.feedback-form button[type=submit]').click();assert.equal(await page.locator('.feedback-form button[type=submit]').isDisabled(),true);assert.equal(await page.getByText('بازخوردت با موفقیت ثبت شد.',{exact:true}).count(),0);await page.locator('.feedback-form').evaluate(f=>{f.requestSubmit();f.requestSubmit()});assert.equal(await page.locator('.hamghadam-form-alert[data-status=success]').count(),0);
+   await page.getByRole('dialog').waitFor();await page.getByText('ممنون که کمکمون کردی 🩷',{exact:true}).waitFor();await page.getByText('بازخوردت با موفقیت ثبت شد.',{exact:true}).waitFor();assert.equal(posts,feedbackBefore+1);await page.screenshot({path:`work/qa/alerts/${size}-success-toast.png`});
    assert.equal(await page.locator('#feedback-notes').inputValue(),'');
    assert.deepEqual(errors,[]);await context.close();
    console.log(`PASS ${size}: both forms share RTL shadcn Alerts for info/error/success; validation, retained values and success-after-ack preserved.`);

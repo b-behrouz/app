@@ -7,7 +7,7 @@ def render(config=None):
     template=(ROOT/'src/index.template.html').read_text(encoding='utf-8')
     def inline(match):
         name=match.group(1)
-        if name not in {'app.js','style-1.css','style-2.css','style-3.css'}:
+        if name not in {'app.js','boot-guard.js','style-1.css','style-2.css','style-3.css'}:
             raise ValueError('Unexpected inline source: '+name)
         return (ROOT/'src'/name).read_text(encoding='utf-8')
     html=re.sub(r'<!-- INLINE:([a-z0-9.-]+) -->',inline,template)
